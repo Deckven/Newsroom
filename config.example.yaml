@@ -1,0 +1,58 @@
+# Newsroom configuration example
+# Copy to config.yaml and adjust to your needs.
+
+# ── Sources ──────────────────────────────────────────────────
+sources:
+  # RSS / Atom feeds
+  - type: rss
+    name: tech-feeds
+    feeds:
+      - https://feeds.arstechnica.com/arstechnica/index
+      - https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml
+      - https://www.theverge.com/rss/index.xml
+
+  # Web scraping (requires per-site CSS selectors)
+  # - type: web
+  #   name: custom-scraper
+  #   sites:
+  #     - url: https://example.com/news
+  #       selectors:
+  #         article: "article"        # container for each article
+  #         title: "h2 a"             # title element (text + href)
+  #         content: "p"              # content/summary element
+  #         date: "time"              # date element (datetime attr or text)
+
+  # NewsAPI.org (requires a free API key from https://newsapi.org)
+  # - type: newsapi
+  #   name: newsapi
+  #   api_key: YOUR_API_KEY_HERE
+  #   page_size: 20
+  #   language: en
+  #   sort_by: publishedAt
+
+# ── Processors ───────────────────────────────────────────────
+processors:
+  filter:
+    enabled: true
+    # Extra keywords beyond the topic (optional):
+    # keywords:
+    #   - machine learning
+    #   - deep learning
+
+  dedup:
+    enabled: true
+    similarity_threshold: 0.8   # 0-1, higher = stricter matching
+
+  llm:
+    enabled: false              # Set to true to enable LLM summaries
+
+# ── LLM settings (only used when processors.llm.enabled = true) ──
+llm:
+  provider: openai              # "openai" or "anthropic"
+  model: gpt-4o-mini            # Model name
+  api_key: null                 # Set your API key here or via environment
+
+# ── Output ───────────────────────────────────────────────────
+output:
+  format: markdown              # markdown | json | html | plaintext
+  path: null                    # File path, or null for stdout
