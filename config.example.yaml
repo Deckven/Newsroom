@@ -46,11 +46,29 @@ processors:
   llm:
     enabled: false              # Set to true to enable LLM summaries
 
+  rewriter:
+    enabled: false              # Set to true to enable style rewriting
+
 # ── LLM settings (only used when processors.llm.enabled = true) ──
 llm:
   provider: openai              # "openai" or "anthropic"
   model: gpt-4o-mini            # Model name
   api_key: null                 # Set your API key here or via environment
+
+# ── Rewriter (стилизация статей) ─────────────────────────────
+# Переписывает собранные новости в стиле вашего блога.
+# Перед использованием нужно:
+#   1. Импортировать корпус: python -m newsroom rewriter-setup import export.xml
+#   2. Запустить анализ стиля: python -m newsroom rewriter-setup analyze
+rewriter:
+  corpus_path: rewriter_corpus.db          # путь к SQLite-файлу корпуса
+  intensity: medium                         # light / medium / full
+  num_examples: 3                           # кол-во few-shot примеров
+  max_article_length: 4000                  # макс. длина статьи (символов)
+  llm:
+    api_key: null                           # Anthropic API key (или через переменную окружения)
+    model: claude-sonnet-4-20250514         # модель для перезаписи
+    max_tokens: 4096
 
 # ── Output ───────────────────────────────────────────────────
 output:

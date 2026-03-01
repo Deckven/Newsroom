@@ -1,0 +1,155 @@
+"""Anthropic API wrapper with retry, rate-limit handling, and prompt caching."""
+
+from __future__ import annotations
+
+import logging
+import time
+from typing import Any
+
+from newsroom.rewriter.adapter import RewriterConfig
+
+logger = logging.getLogger(__name__)
+
+# Retry config
+MAX_RETRIES = 10
+BASE_DELAY = 2.0
+MAX_DELAY = 120.0
+
+
+class LLMClient:
+    """Wrapper around Anthropic SDK with retry and caching support."""
+
+    def __init__(self, settings: RewriterConfig) -> None:
+        import anthropic
+
+        self.settings = settings
+        self.client = anthropic.Anthropic(
+            api_key=settings.anthropic_api_key,
+            max_retries=0,  # we handle retries ourselves
+        )
+        self._total_input_tokens = 0
+        self._total_output_tokens = 0
+        self._total_cache_read_tokens = 0
+        self._total_cache_creation_tokens = 0
+
+    def complete(
+        self,
+        *,
+        system: str | list[dict[str, Any]],
+        messages: list[dict[str, Any]],
+        model: str | None = None,
+        max_tokens: int | None = None,
+        temperature: float | None = None,
+    ) -> str:
+        """Send a completion request with retry logic."""
+        import anthropic
+
+        model = model or self.settings.model
+        max_tokens = max_tokens or self.settings.max_tokens
+        temperature = temperature if temperature is not None else self.settings.temperature
+
+        kwargs: dict[str, Any] = {
+            "model": model,
+            "max_tokens": max_tokens,
+            "temperature": temperature,
+            "messages": messages,
+        }
+        if system:
+            kwargs["system"] = system
+
+        for attempt in range(MAX_RETRIES):
+            try:
+                response = self.client.messages.create(**kwargs)
+                self._track_usage(response.usage)
+                return self._extract_text(response)
+            except anthropic.RateLimitError as e:
+                delay = min(BASE_DELAY * (2 ** attempt), MAX_DELAY)
+                retry_after = getattr(e, "response", None)
+                if retry_after and hasattr(retry_after, "headers"):
+                    ra = retry_after.headers.get("retry-after")
+                    if ra:
+                        delay = max(delay, float(ra))
+                logger.warning(
+                    "Rate limited. Retrying in %.0fs (attempt %d/%d)...",
+                    delay, attempt + 1, MAX_RETRIES,
+                )
+                time.sleep(delay)
+            except anthropic.APIStatusError as e:
+                if e.status_code >= 500 or e.status_code == 529:
+                    delay = min(BASE_DELAY * (2 ** attempt), MAX_DELAY)
+                    logger.warning(
+                        "Server error %d. Retrying in %.0fs...",
+                        e.status_code, delay,
+                    )
+                    time.sleep(delay)
+                else:
+                    raise
+
+        raise RuntimeError(f"Failed after {MAX_RETRIES} retries")
+
+    def complete_cached(
+        self,
+        *,
+        system_text: str,
+        messages: list[dict[str, Any]],
+        model: str | None = None,
+        max_tokens: int | None = None,
+        temperature: float | None = None,
+    ) -> str:
+        """Send a request with prompt caching on the system prompt."""
+        system = [
+            {
+                "type": "text",
+                "text": system_text,
+                "cache_control": {"type": "ephemeral"},
+            }
+        ]
+        return self.complete(
+            system=system,
+            messages=messages,
+            model=model,
+            max_tokens=max_tokens,
+            temperature=temperature,
+        )
+
+    def count_tokens(self, text: str) -> int:
+        """Estimate token count using tiktoken (cl100k_base as approximation)."""
+        import tiktoken
+
+        enc = tiktoken.get_encoding("cl100k_base")
+        return len(enc.encode(text))
+
+    def _track_usage(self, usage: Any) -> None:
+        self._total_input_tokens += getattr(usage, "input_tokens", 0)
+        self._total_output_tokens += getattr(usage, "output_tokens", 0)
+        self._total_cache_read_tokens += getattr(usage, "cache_read_input_tokens", 0)
+        self._total_cache_creation_tokens += getattr(usage, "cache_creation_input_tokens", 0)
+
+    @staticmethod
+    def _extract_text(response: Any) -> str:
+        for block in response.content:
+            if block.type == "text":
+                return block.text
+        return ""
+
+    @property
+    def usage_summary(self) -> dict[str, int]:
+        return {
+            "input_tokens": self._total_input_tokens,
+            "output_tokens": self._total_output_tokens,
+            "cache_read_tokens": self._total_cache_read_tokens,
+            "cache_creation_tokens": self._total_cache_creation_tokens,
+        }
+
+    def estimate_cost(
+        self,
+        input_tokens: int,
+        output_tokens: int,
+        *,
+        batch: bool = False,
+    ) -> float:
+        """Rough cost estimate in USD (Sonnet pricing)."""
+        input_price = 3.0 / 1_000_000
+        output_price = 15.0 / 1_000_000
+        multiplier = 0.5 if batch else 1.0
+        return (input_tokens * input_price + output_tokens * output_price) * multiplier

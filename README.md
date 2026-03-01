@@ -1,6 +1,6 @@
 # Newsroom
 
-Фреймворк для агрегации новостей из нескольких источников (RSS, веб-скрейпинг, NewsAPI) с фильтрацией, дедупликацией, опциональной LLM-суммаризацией и выводом в разных форматах.
+Фреймворк для агрегации новостей из нескольких источников (RSS, веб-скрейпинг, NewsAPI) с фильтрацией, дедупликацией, опциональной LLM-суммаризацией, стилизацией через Rewriter и выводом в разных форматах.
 
 ## Установка
 
@@ -15,6 +15,12 @@ pip install openai        # для OpenAI
 pip install anthropic     # для Anthropic
 ```
 
+Для Rewriter — стилизации статей (опционально):
+
+```bash
+pip install anthropic scikit-learn joblib tiktoken pydantic
+```
+
 ## Быстрый старт
 
 ```bash
@@ -25,6 +31,8 @@ python -m newsroom --topic "AI" --format markdown
 По умолчанию в конфиге уже есть три RSS-ленты (Ars Technica, NYT Tech, The Verge), так что работает сразу.
 
 ## Использование CLI
+
+### Основная команда — сбор новостей
 
 ```
 python -m newsroom --topic <тема> [опции]
@@ -53,6 +61,31 @@ python -m newsroom --topic "space" --format html -o digest.html
 # Простой текст с подробным логом
 python -m newsroom --topic "finance" --format plaintext --verbose
 ```
+
+### Управление Rewriter
+
+```
+python -m newsroom rewriter-setup [-c CONFIG] [-v] {import,analyze,stats}
+```
+
+| Команда | Описание |
+|---------|----------|
+| `import <xml_file>` | Импорт WordPress WXR XML в корпус |
+| `analyze` | Анализ стиля корпуса и генерация style guide |
+| `stats` | Статистика корпуса |
+
+```bash
+# Импорт блога из WordPress-экспорта
+python -m newsroom rewriter-setup import myblog-export.xml
+
+# Анализ стиля (требуется Anthropic API key в конфиге)
+python -m newsroom rewriter-setup analyze
+
+# Просмотр статистики корпуса
+python -m newsroom rewriter-setup stats
+```
+
+Подробнее — в разделе [Rewriter](#rewriter--стилизация-статей).
 
 ## Настройка config.yaml
 
@@ -119,7 +152,12 @@ processors:
 
   llm:
     enabled: false             # включить LLM-суммаризацию
+
+  rewriter:
+    enabled: false             # включить стилизацию через Rewriter
 ```
+
+Порядок выполнения процессоров: `filter` → `dedup` → `llm` → `rewriter`.
 
 ### LLM-суммаризация
 
@@ -131,6 +169,56 @@ llm:
   model: gpt-4o-mini     # название модели
   api_key: YOUR_KEY      # API-ключ
 ```
+
+### Rewriter — стилизация статей
+
+Rewriter переписывает собранные новости в стиле вашего блога. Под капотом: анализ стиля через LLM, TF-IDF кластеризация для подбора few-shot примеров, prompt caching для экономии токенов.
+
+#### Настройка в 3 шага
+
+**1. Импортировать корпус** — загрузить ваши статьи из WordPress-экспорта:
+
+```bash
+python -m newsroom rewriter-setup import myblog-export.xml
+```
+
+**2. Запустить анализ стиля** — LLM проанализирует корпус и сгенерирует style guide:
+
+```bash
+python -m newsroom rewriter-setup analyze
+```
+
+Результат: `rewriter_data/style_guide.md` (стайл-гайд) + `rewriter_data/tfidf_model.pkl` (модель для подбора примеров).
+
+**3. Включить в конфиге:**
+
+```yaml
+processors:
+  rewriter:
+    enabled: true
+
+rewriter:
+  corpus_path: rewriter_corpus.db   # путь к SQLite-файлу корпуса
+  intensity: medium                  # light / medium / full
+  num_examples: 3                    # кол-во few-shot примеров
+  max_article_length: 4000           # макс. длина статьи (символов)
+  llm:
+    api_key: YOUR_ANTHROPIC_KEY      # Anthropic API key
+    model: claude-sonnet-4-20250514  # модель для перезаписи
+    max_tokens: 4096
+```
+
+#### Уровни интенсивности
+
+| Уровень | Описание |
+|---------|----------|
+| `light` | Минимальные изменения: тон, отдельные формулировки. Структура сохраняется. |
+| `medium` | Ощутимая стилизация: лексика, ритм, тон. Общая структура сохраняется. |
+| `full` | Полная перезапись в стиле блога. Структура может меняться. |
+
+#### Graceful degradation
+
+Если Rewriter включён, но не настроен (нет API key или корпуса), процессор пропускается без ошибки — пайплайн продолжает работу.
 
 ### Вывод (output)
 
@@ -146,7 +234,7 @@ output:
 
 ```
 newsroom/
-├── __main__.py          # CLI точка входа
+├── __main__.py          # CLI точка входа (pipeline + rewriter-setup)
 ├── config.py            # Загрузка YAML-конфига
 ├── models.py            # Датаклассы Article и Digest
 ├── pipeline.py          # Оркестратор: fetch → process → format
@@ -160,13 +248,31 @@ newsroom/
 │   ├── base.py          # Абстрактный базовый класс BaseProcessor
 │   ├── filter.py        # Фильтрация по ключевым словам
 │   ├── dedup.py         # Дедупликация по URL и заголовку
-│   └── llm.py           # LLM-суммаризация (OpenAI / Anthropic)
-└── formatters/          # Форматирование вывода
-    ├── base.py          # Абстрактный базовый класс BaseFormatter
-    ├── markdown.py      # Markdown
-    ├── json_fmt.py      # JSON
-    ├── html_fmt.py      # HTML (Jinja2)
-    └── plaintext.py     # Простой текст
+│   ├── llm.py           # LLM-суммаризация (OpenAI / Anthropic)
+│   └── rewriter.py      # Стилизация через Rewriter
+├── formatters/          # Форматирование вывода
+│   ├── base.py          # Абстрактный базовый класс BaseFormatter
+│   ├── markdown.py      # Markdown
+│   ├── json_fmt.py      # JSON
+│   ├── html_fmt.py      # HTML (Jinja2)
+│   └── plaintext.py     # Простой текст
+└── rewriter/            # Движок стилизации (адаптация github.com/Deckven/Rewriter)
+    ├── adapter.py       # Мост между dict-конфигом Newsroom и модулями Rewriter
+    ├── engine.py        # Оркестратор перезаписи
+    ├── rewrite_prompts.py # Промпты для стилизации
+    ├── llm_client.py    # Anthropic API обёртка с retry и кэшированием
+    ├── corpus/          # SQLite-хранилище корпуса
+    │   ├── store.py     # CorpusStore — CRUD для статей, анализов, гайда
+    │   ├── models.py    # Pydantic-модели данных
+    │   └── stats.py     # Статистика корпуса
+    ├── analyzer/        # Анализ стиля
+    │   ├── style_extractor.py  # Иерархический анализ: chunk → merge → synthesize
+    │   ├── examples.py  # TF-IDF + K-Means подбор few-shot примеров
+    │   ├── sampler.py   # Стратифицированная выборка из корпуса
+    │   └── prompts.py   # Промпты для анализа стиля
+    └── importer/        # Импорт контента
+        ├── wordpress.py # Парсер WordPress WXR XML
+        └── cleaner.py   # HTML → markdown-like plaintext
 ```
 
 ## Расширение

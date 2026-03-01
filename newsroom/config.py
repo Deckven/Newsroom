@@ -13,6 +13,7 @@ DEFAULTS: dict[str, Any] = {
         "filter": {"enabled": True},
         "dedup": {"enabled": True, "similarity_threshold": 0.8},
         "llm": {"enabled": False},
+        "rewriter": {"enabled": False},
     },
     "output": {
         "format": "markdown",
@@ -22,6 +23,17 @@ DEFAULTS: dict[str, Any] = {
         "provider": None,  # "openai" | "anthropic"
         "model": None,
         "api_key": None,
+    },
+    "rewriter": {
+        "corpus_path": "rewriter_corpus.db",
+        "intensity": "medium",
+        "num_examples": 3,
+        "max_article_length": 4000,
+        "llm": {
+            "api_key": None,
+            "model": "claude-sonnet-4-20250514",
+            "max_tokens": 4096,
+        },
     },
 }
 
@@ -61,4 +73,16 @@ def validate_config(cfg: dict[str, Any]) -> list[str]:
             issues.append("LLM processor is enabled but no provider is set.")
         if not llm.get("api_key"):
             issues.append("LLM processor is enabled but no api_key is set.")
+    # Rewriter validation
+    if cfg.get("processors", {}).get("rewriter", {}).get("enabled"):
+        rw = cfg.get("rewriter", {})
+        rw_api_key = rw.get("llm", {}).get("api_key")
+        if not rw_api_key:
+            issues.append("Rewriter is enabled but no rewriter.llm.api_key is set.")
+        corpus_path = Path(rw.get("corpus_path", "rewriter_corpus.db"))
+        if not corpus_path.exists():
+            issues.append(
+                f"Rewriter is enabled but corpus file '{corpus_path}' not found. "
+                "Run `python -m newsroom rewriter-setup import` first."
+            )
     return issues

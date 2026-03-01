@@ -37,17 +37,20 @@ class Pipeline:
     def _build_processors(self) -> list:
         proc_cfg = self.config.get("processors", {})
         processors = []
-        # Ordered: filter -> dedup -> llm
-        for name in ("filter", "dedup", "llm"):
+        # Ordered: filter -> dedup -> llm -> rewriter
+        for name in ("filter", "dedup", "llm", "rewriter"):
             section = proc_cfg.get(name, {})
             if not section.get("enabled", False):
                 continue
             cls = PROCESSOR_REGISTRY.get(name)
             if cls is None:
                 continue
-            # For the LLM processor, merge in top-level llm config
+            # For LLM and rewriter processors, merge in top-level config
             if name == "llm":
                 merged = {**self.config.get("llm", {}), **section}
+                processors.append(cls(merged))
+            elif name == "rewriter":
+                merged = {**self.config.get("rewriter", {}), **section}
                 processors.append(cls(merged))
             else:
                 processors.append(cls(section))
