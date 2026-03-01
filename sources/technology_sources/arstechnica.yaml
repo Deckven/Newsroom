@@ -1,0 +1,4 @@
+type: rss
+name: ars-technica
+feeds:
+  - https://feeds.arstechnica.com/arstechnica/index

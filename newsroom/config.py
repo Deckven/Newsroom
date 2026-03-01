@@ -2,12 +2,19 @@
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 from typing import Any
 
 import yaml
 
+log = logging.getLogger(__name__)
+
 DEFAULTS: dict[str, Any] = {
+    "source_dirs": [
+        "sources/technology_sources",
+        "sources/videogames_sources",
+    ],
     "sources": [],
     "processors": {
         "filter": {"enabled": True},
@@ -49,6 +56,48 @@ def _deep_merge(base: dict, override: dict) -> dict:
     return merged
 
 
+def _load_source_dirs(dirs: list[str], base_path: Path) -> list[dict]:
+    """Load source definitions from YAML files in *dirs*.
+
+    Each directory is resolved relative to *base_path* (the folder that
+    contains the main config file).  Files are sorted by name for
+    deterministic ordering.
+    """
+    sources: list[dict] = []
+    for dir_rel in dirs:
+        dir_path = base_path / dir_rel
+        if not dir_path.is_dir():
+            log.debug("source_dirs: skipping %s (not a directory)", dir_path)
+            continue
+        dir_name = dir_path.name
+        files = sorted(
+            p for p in dir_path.iterdir()
+            if p.suffix in (".yaml", ".yml") and p.is_file()
+        )
+        for fp in files:
+            try:
+                data = yaml.safe_load(fp.read_text(encoding="utf-8"))
+            except Exception:
+                log.warning("Failed to parse source file %s, skipping", fp)
+                continue
+            if not isinstance(data, dict):
+                log.warning("Source file %s is not a mapping, skipping", fp)
+                continue
+            if "sources" in data:
+                for src in data["sources"]:
+                    src["_source_dir"] = dir_name
+                    sources.append(src)
+            elif "type" in data:
+                data["_source_dir"] = dir_name
+                sources.append(data)
+            else:
+                log.warning(
+                    "Source file %s has neither 'type' nor 'sources' key, skipping",
+                    fp,
+                )
+    return sources
+
+
 def load_config(path: str | Path) -> dict[str, Any]:
     """Load a YAML config file and merge with defaults."""
     path = Path(path)
@@ -56,6 +105,14 @@ def load_config(path: str | Path) -> dict[str, Any]:
         raise FileNotFoundError(f"Config file not found: {path}")
     with open(path, encoding="utf-8") as fh:
         raw = yaml.safe_load(fh) or {}
+
+    # Load modular sources from directories
+    source_dirs = raw.get("source_dirs", DEFAULTS["source_dirs"])
+    dir_sources = _load_source_dirs(source_dirs, path.parent)
+    if dir_sources:
+        inline = raw.get("sources", [])
+        raw["sources"] = dir_sources + inline
+
     return _deep_merge(DEFAULTS, raw)
 
 

@@ -1,0 +1,4 @@
+type: rss
+name: the-verge
+feeds:
+  - https://www.theverge.com/rss/index.xml

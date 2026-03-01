@@ -89,11 +89,63 @@ python -m newsroom rewriter-setup stats
 
 ## Настройка config.yaml
 
+### Модульные источники (source_dirs)
+
+Источники можно выносить в отдельные YAML-файлы, организованные по тематическим папкам. Это удобно, когда источников много — каждый файл описывает один source-блок, а добавление нового источника не требует правки `config.yaml`.
+
+```
+sources/
+  technology_sources/
+    arstechnica.yaml
+    nytimes_tech.yaml
+    theverge.yaml
+  videogames_sources/
+    ign.yaml
+    kotaku.yaml
+    pcgamer.yaml
+```
+
+В `config.yaml` указываются директории для сканирования:
+
+```yaml
+source_dirs:
+  - sources/technology_sources
+  - sources/videogames_sources
+```
+
+#### Формат YAML-файла источника
+
+**Вариант 1** — один источник (ключ `type` на верхнем уровне):
+
+```yaml
+# sources/technology_sources/arstechnica.yaml
+type: rss
+name: ars-technica
+feeds:
+  - https://feeds.arstechnica.com/arstechnica/index
+```
+
+**Вариант 2** — несколько источников в одном файле (ключ `sources:`):
+
+```yaml
+sources:
+  - type: rss
+    name: feed-one
+    feeds:
+      - https://example.com/feed1
+  - type: rss
+    name: feed-two
+    feeds:
+      - https://example.com/feed2
+```
+
+Источники из `source_dirs` загружаются первыми, затем дополняются inline-источниками из `sources:` в `config.yaml` (обратная совместимость сохраняется).
+
 ### Источники (sources)
 
-#### RSS / Atom
+Inline-источники по-прежнему можно определять прямо в `config.yaml`.  Они добавляются после модульных.
 
-Самый простой вариант — указать список URL лент:
+#### RSS / Atom
 
 ```yaml
 sources:
@@ -233,6 +285,16 @@ output:
 ## Архитектура
 
 ```
+sources/                     # Модульные определения источников (YAML)
+├── technology_sources/      #   Технологические RSS-ленты
+│   ├── arstechnica.yaml
+│   ├── nytimes_tech.yaml
+│   └── theverge.yaml
+└── videogames_sources/      #   Игровые RSS-ленты
+    ├── ign.yaml
+    ├── kotaku.yaml
+    └── pcgamer.yaml
+
 newsroom/
 ├── __main__.py          # CLI точка входа (pipeline + rewriter-setup)
 ├── config.py            # Загрузка YAML-конфига

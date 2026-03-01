@@ -1,0 +1,4 @@
+type: rss
+name: ign
+feeds:
+  - https://feeds.feedburner.com/ign/all

@@ -1,0 +1,4 @@
+type: rss
+name: nytimes-technology
+feeds:
+  - https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml

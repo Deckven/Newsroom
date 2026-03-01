@@ -1,15 +1,25 @@
 # Newsroom configuration example
 # Copy to config.yaml and adjust to your needs.
 
-# ── Sources ──────────────────────────────────────────────────
-sources:
-  # RSS / Atom feeds
-  - type: rss
-    name: tech-feeds
-    feeds:
-      - https://feeds.arstechnica.com/arstechnica/index
-      - https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml
-      - https://www.theverge.com/rss/index.xml
+# ── Source directories ───────────────────────────────────────
+# Each directory is scanned for *.yaml / *.yml files.
+# Every file should contain a single source (type at top level)
+# or multiple sources under a `sources:` key.
+source_dirs:
+  - sources/technology_sources
+  - sources/videogames_sources
+
+# ── Inline sources (optional, merged after source_dirs) ──────
+# You can still define sources directly here.  They are appended
+# after those loaded from source_dirs.
+sources: []
+  # Example inline source:
+  # - type: newsapi
+  #   name: newsapi
+  #   api_key: YOUR_API_KEY_HERE
+  #   page_size: 20
+  #   language: en
+  #   sort_by: publishedAt
 
   # Web scraping (requires per-site CSS selectors)
   # - type: web
@@ -21,14 +31,6 @@ sources:
   #         title: "h2 a"             # title element (text + href)
   #         content: "p"              # content/summary element
   #         date: "time"              # date element (datetime attr or text)
-
-  # NewsAPI.org (requires a free API key from https://newsapi.org)
-  # - type: newsapi
-  #   name: newsapi
-  #   api_key: YOUR_API_KEY_HERE
-  #   page_size: 20
-  #   language: en
-  #   sort_by: publishedAt
 
 # ── Processors ───────────────────────────────────────────────
 processors:
