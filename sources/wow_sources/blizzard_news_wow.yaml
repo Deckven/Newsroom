@@ -1,0 +1,4 @@
+type: api
+name: blizzard-news-wow
+feeds:
+  - https://news.blizzard.com/en-us/api/news?feedSlug=world-of-warcraft&pageSize=20

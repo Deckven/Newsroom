@@ -1,0 +1,4 @@
+type: rss
+name: reddit-d4paladin
+feeds:
+  - https://www.reddit.com/r/D4Paladin/.rss

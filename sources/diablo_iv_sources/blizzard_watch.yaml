@@ -1,0 +1,4 @@
+type: rss
+name: blizzard-watch
+feeds:
+  - https://blizzardwatch.com/feed/

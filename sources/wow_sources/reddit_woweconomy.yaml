@@ -1,0 +1,4 @@
+type: rss
+name: reddit-woweconomy
+feeds:
+  - https://www.reddit.com/r/woweconomy/.rss

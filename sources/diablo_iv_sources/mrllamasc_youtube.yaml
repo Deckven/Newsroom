@@ -1,0 +1,4 @@
+type: rss
+name: mrllamasc-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCfSjEfGnOfSko_DOMvzLXoQ

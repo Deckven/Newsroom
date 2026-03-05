@@ -1,0 +1,4 @@
+type: rss
+name: raxxanterax-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCkceSoLRbo0NjfSQr7AUVJg

@@ -1,0 +1,4 @@
+type: rss
+name: reddit-gotlegends
+feeds:
+  - https://www.reddit.com/r/gotlegends/.rss

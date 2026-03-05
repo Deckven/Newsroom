@@ -1,0 +1,4 @@
+type: rss
+name: reddit-wownoob
+feeds:
+  - https://www.reddit.com/r/wownoob/.rss

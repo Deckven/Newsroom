@@ -1,0 +1,4 @@
+type: rss
+name: diablo-official-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCsSfRMBnMCFoKAMSYNW2iOg

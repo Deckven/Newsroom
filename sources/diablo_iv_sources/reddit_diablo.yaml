@@ -1,0 +1,4 @@
+type: rss
+name: reddit-diablo
+feeds:
+  - https://www.reddit.com/r/Diablo/.rss

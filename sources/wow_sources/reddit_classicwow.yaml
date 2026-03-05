@@ -1,0 +1,4 @@
+type: rss
+name: reddit-classicwow
+feeds:
+  - https://www.reddit.com/r/classicwow/.rss

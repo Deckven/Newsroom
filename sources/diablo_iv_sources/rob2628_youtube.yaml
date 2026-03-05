@@ -1,0 +1,4 @@
+type: rss
+name: rob2628-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCifaRmCWhMmBSBSxEEDjmOw

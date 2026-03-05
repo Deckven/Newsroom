@@ -1,0 +1,4 @@
+type: rss
+name: rhykker-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCbTJEBKPMr1TXnGnCpYzxFg

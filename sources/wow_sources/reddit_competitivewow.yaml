@@ -1,0 +1,4 @@
+type: rss
+name: reddit-competitivewow
+feeds:
+  - https://www.reddit.com/r/CompetitiveWoW/.rss

@@ -1,0 +1,4 @@
+type: rss
+name: wowhead
+feeds:
+  - https://www.wowhead.com/news/rss/all

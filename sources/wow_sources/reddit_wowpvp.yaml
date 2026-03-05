@@ -1,0 +1,4 @@
+type: rss
+name: reddit-wowpvp
+feeds:
+  - https://www.reddit.com/r/worldofpvp/.rss

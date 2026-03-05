@@ -1,0 +1,4 @@
+type: api
+name: blizzard-news-diablo4
+feeds:
+  - https://news.blizzard.com/en-us/api/news?feedSlug=diablo-4&pageSize=20
