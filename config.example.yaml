@@ -8,6 +8,8 @@
 source_dirs:
   - sources/technology_sources
   - sources/videogames_sources
+  # - sources/obsidian_sources
+  # - sources/gdrive_sources
 
 # ── Inline sources (optional, merged after source_dirs) ──────
 # You can still define sources directly here.  They are appended
@@ -31,6 +33,27 @@ sources: []
   #         title: "h2 a"             # title element (text + href)
   #         content: "p"              # content/summary element
   #         date: "time"              # date element (datetime attr or text)
+
+  # Obsidian vault (reads .md notes as articles)
+  # - type: obsidian
+  #   name: my-vault
+  #   vault_path: "C:/Users/me/MyVault"
+  #   folders: ["Articles", "Blog/Published"]
+  #   filter:
+  #     tags: [technology]
+  #     frontmatter:
+  #       status: published
+  #     modified_after: "2025-01-01"
+  #   recursive: true
+
+  # Google Drive (reads documents from a folder)
+  # - type: gdrive
+  #   name: research-docs
+  #   credentials_path: "credentials.json"
+  #   token_path: "token.json"
+  #   folders: ["YOUR_FOLDER_ID"]
+  #   file_types: [gdoc, md, txt]
+  #   max_files: 50
 
 # ── Processors ───────────────────────────────────────────────
 processors:
@@ -71,6 +94,29 @@ rewriter:
     api_key: null                           # Anthropic API key (или через переменную окружения)
     model: claude-sonnet-4-20250514         # модель для перезаписи
     max_tokens: 4096
+
+# ── Exporters (optional output destinations) ─────────────────
+# Exporters run after formatting, writing results to external systems.
+exporters: []
+  # Obsidian vault exporter:
+  # - type: obsidian
+  #   vault_path: "/path/to/vault"
+  #   output_folder: "Newsroom/Digests"
+  #   mode: single_file          # single_file | per_article
+  #   date_in_filename: true
+  #   frontmatter:
+  #     extra_tags: [newsroom, auto-generated]
+  #     properties:
+  #       source: newsroom
+
+  # Google Drive exporter:
+  # - type: gdrive
+  #   credentials_path: "credentials.json"
+  #   token_path: "token.json"
+  #   folder_id: "YOUR_FOLDER_ID"
+  #   upload_as: file             # file | gdoc
+  #   file_format: markdown       # markdown | html | plaintext | json
+  #   filename_template: "{topic}_{date}"
 
 # ── Output ───────────────────────────────────────────────────
 output:

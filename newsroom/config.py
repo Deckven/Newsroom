@@ -16,6 +16,7 @@ DEFAULTS: dict[str, Any] = {
         "sources/videogames_sources",
     ],
     "sources": [],
+    "exporters": [],
     "processors": {
         "filter": {"enabled": True},
         "dedup": {"enabled": True, "similarity_threshold": 0.8},
@@ -142,4 +143,20 @@ def validate_config(cfg: dict[str, Any]) -> list[str]:
                 f"Rewriter is enabled but corpus file '{corpus_path}' not found. "
                 "Run `python -m newsroom rewriter-setup import` first."
             )
+    # Exporter validation
+    for i, exp in enumerate(cfg.get("exporters", [])):
+        if "type" not in exp:
+            issues.append(f"Exporter #{i} is missing a 'type' field.")
+            continue
+        etype = exp["type"]
+        if etype == "obsidian" and not exp.get("vault_path"):
+            issues.append(f"Exporter #{i} (obsidian): 'vault_path' is required.")
+        if etype == "gdrive":
+            if not exp.get("folder_id"):
+                issues.append(f"Exporter #{i} (gdrive): 'folder_id' is required.")
+            creds = exp.get("credentials_path", "credentials.json")
+            if not Path(creds).exists():
+                issues.append(
+                    f"Exporter #{i} (gdrive): credentials file '{creds}' not found."
+                )
     return issues

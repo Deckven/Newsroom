@@ -1,0 +1,16 @@
+# Example: Obsidian vault source
+# Reads published markdown notes from an Obsidian vault.
+# Adjust vault_path and folders to match your setup.
+
+type: obsidian
+name: my-vault
+vault_path: "C:/Users/me/MyVault"          # absolute path to vault root
+folders:
+  - Articles
+  - Blog/Published
+filter:
+  tags: [technology]
+  frontmatter:
+    status: published
+  modified_after: "2025-01-01"
+recursive: true

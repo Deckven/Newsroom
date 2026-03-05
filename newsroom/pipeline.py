@@ -7,6 +7,7 @@ import logging
 from datetime import datetime
 from typing import Any
 
+from newsroom.exporters import EXPORTER_REGISTRY
 from newsroom.formatters import FORMATTER_REGISTRY
 from newsroom.models import Article, Digest
 from newsroom.processors import PROCESSOR_REGISTRY
@@ -16,12 +17,13 @@ logger = logging.getLogger(__name__)
 
 
 class Pipeline:
-    """Orchestrates the fetch -> process -> format pipeline."""
+    """Orchestrates the fetch -> process -> format -> export pipeline."""
 
     def __init__(self, config: dict[str, Any]) -> None:
         self.config = config
         self.sources = self._build_sources()
         self.processors = self._build_processors()
+        self.exporters = self._build_exporters()
 
     def _build_sources(self) -> list:
         sources = []
@@ -55,6 +57,17 @@ class Pipeline:
             else:
                 processors.append(cls(section))
         return processors
+
+    def _build_exporters(self) -> list:
+        exporters = []
+        for exp_cfg in self.config.get("exporters", []):
+            exp_type = exp_cfg.get("type")
+            cls = EXPORTER_REGISTRY.get(exp_type)
+            if cls is None:
+                logger.warning("Unknown exporter type: %s — skipping.", exp_type)
+                continue
+            exporters.append(cls(exp_cfg))
+        return exporters
 
     async def _fetch_all(self, topic: str) -> list[Article]:
         """Fetch articles from all sources concurrently."""
@@ -90,6 +103,22 @@ class Pipeline:
             formatter_cls = FORMATTER_REGISTRY["markdown"]
         return formatter_cls().format(digest)
 
+    async def _export_all(self, digest: Digest, formatted: str) -> list[str]:
+        """Run all exporters concurrently. Returns list of status strings."""
+        if not self.exporters:
+            return []
+
+        tasks = [exp.export(digest, formatted) for exp in self.exporters]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        statuses: list[str] = []
+        for result in results:
+            if isinstance(result, Exception):
+                logger.error("Exporter failed: %s", result)
+            else:
+                statuses.append(result)
+        return statuses
+
     async def run_async(self, topic: str, fmt: str | None = None) -> str:
         """Execute the full pipeline asynchronously and return formatted output."""
         articles = await self._fetch_all(topic)
@@ -102,7 +131,14 @@ class Pipeline:
             metadata={"source_count": len(self.sources)},
         )
 
-        return self._format(digest, fmt)
+        formatted = self._format(digest, fmt)
+
+        # Export stage
+        exported = await self._export_all(digest, formatted)
+        if exported:
+            digest.metadata["exported_to"] = exported
+
+        return formatted
 
     def run(self, topic: str, fmt: str | None = None) -> str:
         """Synchronous convenience wrapper around *run_async*."""

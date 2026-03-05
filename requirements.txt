@@ -16,3 +16,8 @@ jinja2>=3.1
 # joblib>=1.3
 # tiktoken>=0.5
 # pydantic>=2.0
+
+# Optional: Google Drive source & exporter
+# google-auth>=2.0
+# google-auth-oauthlib>=1.0
+# google-api-python-client>=2.0

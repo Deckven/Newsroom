@@ -45,6 +45,11 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Enable verbose logging",
     )
+    parser.add_argument(
+        "--no-export",
+        action="store_true",
+        help="Skip all exporters (even if configured)",
+    )
 
     # --- rewriter-setup subcommand ---
     rw_parser = sub.add_parser(
@@ -78,6 +83,27 @@ def _build_parser() -> argparse.ArgumentParser:
     # rewriter-setup stats
     rw_sub.add_parser("stats", help="Show corpus statistics")
 
+    # --- gdrive-auth subcommand ---
+    gd_parser = sub.add_parser(
+        "gdrive-auth",
+        help="Manage Google Drive OAuth2 authentication",
+    )
+    gd_parser.add_argument(
+        "gd_action",
+        choices=["login", "revoke", "status"],
+        help="Action: login (authenticate), revoke (remove token), status (show token info)",
+    )
+    gd_parser.add_argument(
+        "--credentials",
+        default="credentials.json",
+        help="Path to OAuth client secrets file (default: credentials.json)",
+    )
+    gd_parser.add_argument(
+        "--token",
+        default="token.json",
+        help="Path to stored token file (default: token.json)",
+    )
+
     return parser
 
 
@@ -100,6 +126,9 @@ def _cmd_run(args: argparse.Namespace) -> None:
 
     import logging
     logger = logging.getLogger("newsroom")
+
+    if args.no_export:
+        config["exporters"] = []
 
     issues = validate_config(config)
     for issue in issues:
@@ -202,14 +231,56 @@ def _rewriter_stats(settings) -> None:
         store.close()
 
 
+def _cmd_gdrive_auth(args: argparse.Namespace) -> None:
+    """Handle gdrive-auth subcommands."""
+    from newsroom.gdrive_auth import get_drive_service, revoke_token, token_status
+
+    if args.gd_action == "login":
+        try:
+            get_drive_service(args.credentials, args.token)
+            print("Google Drive authentication successful. Token saved.")
+        except ImportError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(1)
+        except FileNotFoundError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(1)
+
+    elif args.gd_action == "revoke":
+        try:
+            ok = revoke_token(args.token)
+            if ok:
+                print("Token revoked and deleted.")
+            else:
+                print("No active token found.")
+        except ImportError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(1)
+
+    elif args.gd_action == "status":
+        info = token_status(args.token)
+        if info.get("authenticated"):
+            print(f"Authenticated: yes")
+            print(f"Token path:    {info['path']}")
+            print(f"Scopes:        {', '.join(info.get('scopes', []))}")
+            print(f"Client ID:     {info.get('client_id', 'unknown')}")
+        else:
+            print(f"Authenticated: no")
+            print(f"Token path:    {info['path']}")
+            if info.get("error"):
+                print(f"Error:         {info['error']}")
+
+
 def main(argv: list[str] | None = None) -> None:
     args = parse_args(argv)
 
     import logging
-    setup_logging(logging.DEBUG if args.verbose else logging.INFO)
+    setup_logging(logging.DEBUG if getattr(args, "verbose", False) else logging.INFO)
 
     if args.command == "rewriter-setup":
         _cmd_rewriter_setup(args)
+    elif args.command == "gdrive-auth":
+        _cmd_gdrive_auth(args)
     else:
         _cmd_run(args)
 

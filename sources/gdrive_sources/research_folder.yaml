@@ -1,0 +1,12 @@
+# Example: Google Drive source
+# Reads documents from a Google Drive folder.
+# Requires OAuth2 setup: python -m newsroom gdrive-auth login
+
+type: gdrive
+name: research-docs
+credentials_path: "credentials.json"
+token_path: "token.json"
+folders:
+  - "YOUR_FOLDER_ID"                        # Drive folder ID from the URL
+file_types: [gdoc, md, txt]
+max_files: 50
