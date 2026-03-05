@@ -1,0 +1,4 @@
+type: rss
+name: gematsu
+feeds:
+  - https://www.gematsu.com/feed

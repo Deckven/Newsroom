@@ -1,0 +1,4 @@
+type: rss
+name: game-informer
+feeds:
+  - https://gameinformer.com/rss.xml

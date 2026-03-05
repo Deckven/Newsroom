@@ -1,0 +1,4 @@
+type: rss
+name: gamespot
+feeds:
+  - https://www.gamespot.com/feeds/mashup/

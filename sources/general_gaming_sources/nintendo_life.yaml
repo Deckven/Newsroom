@@ -1,0 +1,4 @@
+type: rss
+name: nintendo-life
+feeds:
+  - https://www.nintendolife.com/feeds/latest

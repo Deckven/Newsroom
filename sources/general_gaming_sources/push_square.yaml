@@ -1,0 +1,4 @@
+type: rss
+name: push-square
+feeds:
+  - https://www.pushsquare.com/feeds/latest

@@ -1,0 +1,4 @@
+type: rss
+name: gamersnexus
+feeds:
+  - https://gamersnexus.net/rss.xml

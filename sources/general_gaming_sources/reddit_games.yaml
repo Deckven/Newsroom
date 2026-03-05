@@ -1,0 +1,4 @@
+type: rss
+name: reddit-games
+feeds:
+  - https://www.reddit.com/r/Games/.rss
