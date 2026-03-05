@@ -1,0 +1,4 @@
+type: rss
+name: eveonline-official-news
+feeds:
+  - https://www.eveonline.com/articles/rss

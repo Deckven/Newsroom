@@ -1,0 +1,9 @@
+type: web
+name: capsuleerkit
+sites:
+  - url: https://www.capsuleerkit.com/
+    selectors:
+      article: ".tool-card"
+      title: "h2 a"
+      content: "p"
+      date: "time"

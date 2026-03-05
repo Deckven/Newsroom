@@ -1,0 +1,9 @@
+type: web
+name: mcp-market
+sites:
+  - url: https://mcpmarket.com/server/eve-online-market
+    selectors:
+      article: "article"
+      title: "h2 a"
+      content: "p"
+      date: "time"

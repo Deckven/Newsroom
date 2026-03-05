@@ -1,0 +1,9 @@
+type: web
+name: npsi-community
+sites:
+  - url: https://www.integrityband.com/
+    selectors:
+      article: ".fleet-card"
+      title: "h2 a"
+      content: "p"
+      date: "time"

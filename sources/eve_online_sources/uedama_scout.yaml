@@ -1,0 +1,9 @@
+type: web
+name: uedama-scout
+sites:
+  - url: https://www.twitch.tv/uedama_scout
+    selectors:
+      article: "article"
+      title: "h2 a"
+      content: "p"
+      date: "time"

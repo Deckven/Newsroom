@@ -1,0 +1,4 @@
+type: rss
+name: eveonline-patch-notes
+feeds:
+  - https://www.eveonline.com/articles/rss?tags=patch-notes

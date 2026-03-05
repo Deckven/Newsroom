@@ -1,0 +1,9 @@
+type: web
+name: galaxyfinder
+sites:
+  - url: https://wormholes.new-eden.io/
+    selectors:
+      article: "article"
+      title: "h2 a"
+      content: "p"
+      date: "time"

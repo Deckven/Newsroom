@@ -1,0 +1,4 @@
+type: rss
+name: the-greybill
+feeds:
+  - https://thegreybill.com/feed/

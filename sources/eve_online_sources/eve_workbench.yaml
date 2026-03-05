@@ -1,0 +1,9 @@
+type: web
+name: eve-workbench
+sites:
+  - url: https://www.eveworkbench.com/fitting
+    selectors:
+      article: ".fitting-card"
+      title: "h2 a"
+      content: "p"
+      date: "time"

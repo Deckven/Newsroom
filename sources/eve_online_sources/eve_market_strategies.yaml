@@ -1,0 +1,9 @@
+type: web
+name: eve-market-strategies
+sites:
+  - url: https://orbitalenterprises.github.io/eve-market-strategies/index
+    selectors:
+      article: "article"
+      title: "h2 a"
+      content: "p"
+      date: "time"

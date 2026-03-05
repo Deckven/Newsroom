@@ -1,0 +1,4 @@
+type: rss
+name: jeve-assets
+feeds:
+  - https://github.com/GoldenGnu/jeveassets/releases.atom

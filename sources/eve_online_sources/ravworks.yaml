@@ -1,0 +1,9 @@
+type: web
+name: ravworks
+sites:
+  - url: https://ravworks.com/
+    selectors:
+      article: "article"
+      title: "h2 a"
+      content: "p"
+      date: "time"

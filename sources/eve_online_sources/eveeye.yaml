@@ -1,0 +1,9 @@
+type: web
+name: eveeye
+sites:
+  - url: https://eveeye.com/
+    selectors:
+      article: "article"
+      title: "h2 a"
+      content: "p"
+      date: "time"

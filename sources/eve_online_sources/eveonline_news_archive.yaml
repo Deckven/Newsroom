@@ -1,0 +1,9 @@
+type: web
+name: eveonline-news-archive
+sites:
+  - url: https://www.eveonline.com/news/archive/2026
+    selectors:
+      article: "article"
+      title: "h2 a"
+      content: "p"
+      date: "time"

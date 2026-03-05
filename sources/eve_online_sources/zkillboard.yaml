@@ -1,0 +1,4 @@
+type: rss
+name: zkillboard
+feeds:
+  - https://zkillboard.com/feed/

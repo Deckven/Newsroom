@@ -1,0 +1,9 @@
+type: web
+name: triff-tools
+sites:
+  - url: https://triff.tools/
+    selectors:
+      article: "article"
+      title: "h2 a"
+      content: "p"
+      date: "time"

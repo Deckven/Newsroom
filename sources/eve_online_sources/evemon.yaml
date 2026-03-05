@@ -1,0 +1,4 @@
+type: rss
+name: evemon
+feeds:
+  - https://github.com/peterhaneve/evern/releases.atom

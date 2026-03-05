@@ -1,0 +1,4 @@
+type: rss
+name: eve-news-24
+feeds:
+  - https://evenews24.com/feed/

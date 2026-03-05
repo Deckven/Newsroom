@@ -1,0 +1,4 @@
+type: rss
+name: eve-university-wiki
+feeds:
+  - https://wiki.eveuniversity.org/Special:RecentChanges?feed=rss

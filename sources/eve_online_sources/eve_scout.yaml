@@ -1,0 +1,9 @@
+type: web
+name: eve-scout
+sites:
+  - url: https://www.eve-scout.com/
+    selectors:
+      article: "article"
+      title: "h2 a"
+      content: "p"
+      date: "time"

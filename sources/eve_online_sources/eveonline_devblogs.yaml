@@ -1,0 +1,9 @@
+type: web
+name: eveonline-devblogs
+sites:
+  - url: https://www.eveonline.com/news/t/dev-blogs
+    selectors:
+      article: "article"
+      title: "h2 a"
+      content: "p"
+      date: "time"

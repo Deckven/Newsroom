@@ -1,0 +1,9 @@
+type: web
+name: dotlan-eve-maps
+sites:
+  - url: https://evemaps.dotlan.net/
+    selectors:
+      article: ".news-item"
+      title: "a"
+      content: "p"
+      date: "time"

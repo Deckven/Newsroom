@@ -1,0 +1,9 @@
+type: web
+name: eve-who
+sites:
+  - url: https://evewho.com/
+    selectors:
+      article: ".news-item"
+      title: "a"
+      content: "p"
+      date: "time"

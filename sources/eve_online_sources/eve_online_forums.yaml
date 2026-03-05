@@ -1,0 +1,9 @@
+type: web
+name: eveonline-forums
+sites:
+  - url: https://forums.eveonline.com/c/third-party-developers/13
+    selectors:
+      article: ".topic-list-item"
+      title: ".link-top-line a"
+      content: ".excerpt"
+      date: "time"

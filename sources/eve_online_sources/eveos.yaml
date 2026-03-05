@@ -1,0 +1,15 @@
+type: web
+name: eve-os
+sites:
+  - url: https://www.eveos.space/markets
+    selectors:
+      article: "article"
+      title: "h2 a"
+      content: "p"
+      date: "time"
+  - url: https://www.eveos.space/industry
+    selectors:
+      article: "article"
+      title: "h2 a"
+      content: "p"
+      date: "time"

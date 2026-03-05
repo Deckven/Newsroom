@@ -1,0 +1,9 @@
+type: web
+name: eve-pi-manager
+sites:
+  - url: https://forums.eveonline.com/t/eve-pi-manager/503645
+    selectors:
+      article: ".post"
+      title: ".topic-title a"
+      content: ".cooked p"
+      date: "time"

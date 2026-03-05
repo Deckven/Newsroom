@@ -1,0 +1,9 @@
+type: web
+name: tripwire-wh-mapper
+sites:
+  - url: https://tripwire.eve-apps.com/
+    selectors:
+      article: "article"
+      title: "h2 a"
+      content: "p"
+      date: "time"

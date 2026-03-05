@@ -1,0 +1,9 @@
+type: web
+name: planets-in-space
+sites:
+  - url: https://www.planetsinspace.com/
+    selectors:
+      article: "article"
+      title: "h2 a"
+      content: "p"
+      date: "time"

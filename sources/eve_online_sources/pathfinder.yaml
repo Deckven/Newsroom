@@ -1,0 +1,4 @@
+type: rss
+name: pathfinder-wh-mapper
+feeds:
+  - https://github.com/exodus4d/pathfinder/releases.atom
