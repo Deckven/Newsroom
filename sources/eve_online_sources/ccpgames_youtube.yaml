@@ -1,0 +1,4 @@
+type: rss
+name: ccpgames-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UC3cxDDMpYTZ7PqZma4NdNuA

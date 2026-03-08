@@ -1,0 +1,4 @@
+type: rss
+name: capcom-usa-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCyuEAZQzRqhcaLZvQd9ZUNA

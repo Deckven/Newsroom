@@ -1,0 +1,4 @@
+type: rss
+name: rockstar-games-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UC6VcWc1rAoWdBCM0JxrRQ3A

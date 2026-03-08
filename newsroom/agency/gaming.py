@@ -1,9 +1,9 @@
 """
-Gaming Agency — multi-agent newsroom for video game coverage.
+WoWCasual — Gaming news agency.
 
-Reporters: Новостник, Лоровед, Автор гайдов,
-           Умеренный критик, Резкий критик, Ностальгирующий критик
-Quality:   Фактчекер, Редактор (provided by BaseAgency)
+Editorial:    Корреспондент, Аналитик, Обозреватель, Лоровед, Гайдовод
+Production:   Фактчекер, Редактор, Рерайтер (provided by BaseAgency)
+Distribution: SMM-менеджер, SEO-специалист, Комьюнити-менеджер (provided by BaseAgency)
 """
 
 from __future__ import annotations
@@ -17,22 +17,21 @@ from newsroom.agency.base import BaseAgency
 
 # Mapping from role slug to factory function
 _REPORTER_REGISTRY: dict[str, Any] = {
-    "новостник": role_factory.create_newsmaker,
+    "корреспондент": role_factory.create_correspondent,
+    "аналитик": role_factory.create_analyst,
+    "обозреватель": role_factory.create_reviewer,
     "лоровед": role_factory.create_lore_expert,
     "гайдовод": role_factory.create_guide_writer,
-    "умеренный": role_factory.create_moderate_critic,
-    "резкий": role_factory.create_harsh_critic,
-    "ностальгик": role_factory.create_nostalgic_critic,
 }
 
-# Default set of reporters if none specified
-_DEFAULT_ROLES = ["новостник", "лоровед", "умеренный"]
+# Default set of editorial roles if none specified
+_DEFAULT_ROLES = ["корреспондент", "аналитик", "обозреватель"]
 
 
-class GamingAgency(BaseAgency):
-    """Agency specialized in video game news, reviews, and analysis."""
+class WoWCasualAgency(BaseAgency):
+    """Gaming news agency — video game news, reviews, guides, and analysis."""
 
-    name = "gaming"
+    name = "wowcasual"
 
     def __init__(
         self,
@@ -45,11 +44,13 @@ class GamingAgency(BaseAgency):
     def _build_context(self, topic: str, **kwargs: Any) -> str:
         game = kwargs.get("game", self.game) or topic
         return (
-            f"Ты работаешь в игровом новостном агентстве Newsroom.\n"
+            f"Ты работаешь в игровом новостном агентстве WoWCasual.\n"
             f"Игра/тема: {game}\n"
             f"Тема выпуска: {topic}\n\n"
             f"Целевая аудитория — геймеры, которые ценят конкретику, "
-            f"честность и глубину. Без кликбейта, без воды."
+            f"честность и глубину. Без кликбейта, без воды.\n"
+            f"Тон: неформальный, но компетентный. "
+            f"Соцсети: Discord, Twitter/X, Telegram, Reddit."
         )
 
     def _select_reporters(
@@ -92,5 +93,5 @@ class GamingAgency(BaseAgency):
 
     @staticmethod
     def available_roles() -> list[str]:
-        """Return slugs of all available reporter roles."""
+        """Return slugs of all available editorial roles."""
         return list(_REPORTER_REGISTRY.keys())

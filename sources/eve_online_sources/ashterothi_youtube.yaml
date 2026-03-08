@@ -1,0 +1,4 @@
+type: rss
+name: ashterothi-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCPOYW7dOo_mqPP6-HkjJ2ng

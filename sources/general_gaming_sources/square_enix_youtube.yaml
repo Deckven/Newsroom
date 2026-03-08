@@ -1,0 +1,4 @@
+type: rss
+name: square-enix-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UC6SmH9mR82nj28_NNg_rZvA

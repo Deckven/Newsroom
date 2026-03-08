@@ -1,0 +1,4 @@
+type: rss
+name: datmodz-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCP-epVLC378jqa8iFtIN_pA

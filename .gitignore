@@ -10,3 +10,5 @@ build/
 *.db
 token.json
 credentials.json
+.env
+.env.*

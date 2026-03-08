@@ -1,0 +1,4 @@
+type: rss
+name: bandai-namco-america-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UC_ntXHv-XdKCD7CPynVvnQw

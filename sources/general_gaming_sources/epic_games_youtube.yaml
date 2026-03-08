@@ -1,0 +1,4 @@
+type: rss
+name: epic-games-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCWuRi1C8IsKbJG36Occ8JKg

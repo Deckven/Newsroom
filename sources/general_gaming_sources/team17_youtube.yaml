@@ -1,0 +1,4 @@
+type: rss
+name: team17-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UC-pYdpQSasQvmocEDWZUotQ

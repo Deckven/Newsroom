@@ -1,0 +1,4 @@
+type: rss
+name: larian-studios-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCQ-AAXSt0M5Gx0-A9UGut8g

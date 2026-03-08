@@ -1,0 +1,4 @@
+type: rss
+name: bethesda-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCvZHe-SP3xC7DdOk4Ri8QBw

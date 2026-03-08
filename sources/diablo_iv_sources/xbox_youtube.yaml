@@ -1,0 +1,4 @@
+type: rss
+name: xbox-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCjBp_7RuDBUYbd1LegWEJ8g

@@ -1,13 +1,14 @@
 """
-ThreeBooks Agency — multi-agent newsroom for research material gathering.
+Technocrats — Techno-futurological research agency.
 
-Covers three interconnected non-fiction books:
+Serves the ThreeBooks project — three interconnected non-fiction books:
   1. "Контуры расколотого мира" — futurology, geopolitics
   2. "Пятая информационная революция" — AI, quantum, neurointerfaces
   3. "Поколение двойного шторма" — Ukrainian generation X, war, independence
 
-Reporters: Новостник, Умеренный критик, Ностальгирующий критик
-Quality:   Фактчекер, Редактор (provided by BaseAgency)
+Editorial:    Корреспондент, Аналитик, Футуролог, Историограф, Рецензент
+Production:   Фактчекер, Редактор, Рерайтер (provided by BaseAgency)
+Distribution: SMM-менеджер, SEO-специалист, Комьюнити-менеджер (provided by BaseAgency)
 """
 
 from __future__ import annotations
@@ -21,9 +22,11 @@ from newsroom.agency import agents as role_factory
 from newsroom.agency.base import BaseAgency
 
 _REPORTER_REGISTRY: dict[str, Any] = {
-    "новостник": role_factory.create_newsmaker,
-    "умеренный": role_factory.create_moderate_critic,
-    "ностальгик": role_factory.create_nostalgic_critic,
+    "корреспондент": role_factory.create_correspondent,
+    "аналитик": role_factory.create_analyst,
+    "футуролог": role_factory.create_futurologist,
+    "историограф": role_factory.create_historiographer,
+    "рецензент": role_factory.create_book_reviewer,
 }
 
 _BOOKS = {
@@ -44,14 +47,14 @@ _BOOKS = {
     },
 }
 
-# Default roles for research-oriented work
-_DEFAULT_ROLES = ["новостник", "умеренный", "ностальгик"]
+# Default editorial roles for research-oriented work
+_DEFAULT_ROLES = ["корреспондент", "аналитик", "футуролог"]
 
 
-class ThreeBooksAgency(BaseAgency):
-    """Agency specialized in gathering and analyzing material for ThreeBooks."""
+class TechnocratsAgency(BaseAgency):
+    """Techno-futurological research agency for the ThreeBooks project."""
 
-    name = "threebooks"
+    name = "technocrats"
 
     def __init__(
         self,
@@ -59,11 +62,6 @@ class ThreeBooksAgency(BaseAgency):
         target_book: str | None = None,
         **kwargs: Any,
     ) -> None:
-        """
-        Args:
-            threebooks_path: Path to ThreeBooks project root.
-            target_book: "book1", "book2", "book3", or None for all.
-        """
         super().__init__(**kwargs)
         self.threebooks_path = Path(threebooks_path)
         self.target_book = target_book
@@ -78,7 +76,6 @@ class ThreeBooksAgency(BaseAgency):
         outline = book_dir / "outline.md"
         if outline.exists():
             text = outline.read_text(encoding="utf-8")
-            # Trim to keep context manageable
             if len(text) > 3000:
                 text = text[:3000] + "\n...(обрезано)"
             sections.append(f"=== СТРУКТУРА КНИГИ ===\n{text}")
@@ -89,7 +86,7 @@ class ThreeBooksAgency(BaseAgency):
         book = kwargs.get("target_book", self.target_book)
 
         header = (
-            "Ты работаешь в исследовательском агентстве Newsroom, "
+            "Ты работаешь в исследовательском агентстве Technocrats, "
             "обслуживающем проект ThreeBooks — три взаимосвязанные нон-фикшн книги.\n\n"
         )
 
@@ -97,7 +94,6 @@ class ThreeBooksAgency(BaseAgency):
             book_ctx = self._load_book_context(book)
             header += f"{book_ctx}\n\n"
         else:
-            # All books summary
             for key, info in _BOOKS.items():
                 header += f"- {info['title']}: {info['focus']}\n"
             header += "\n"
@@ -106,7 +102,9 @@ class ThreeBooksAgency(BaseAgency):
             f"Тема исследования: {topic}\n\n"
             f"Стандарт качества: каждое утверждение должно опираться на источник. "
             f"Оценка надёжности: high / medium / low / unverified. "
-            f"Гипотезы должны содержать аргументы за и против."
+            f"Гипотезы должны содержать аргументы за и против.\n\n"
+            f"Тон: экспертный, аналитический. "
+            f"Соцсети: LinkedIn, Telegram, Twitter/X."
         )
         return header
 

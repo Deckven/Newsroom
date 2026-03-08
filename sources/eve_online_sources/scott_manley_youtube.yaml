@@ -1,0 +1,4 @@
+type: rss
+name: scott-manley-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCxzC4EngIsMrPmbm6Nxvb-A

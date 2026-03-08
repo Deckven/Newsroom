@@ -1,0 +1,4 @@
+type: rss
+name: ubisoft-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UC0KU8F9jJqSLS11LRXvFWmg

@@ -1,0 +1,4 @@
+type: rss
+name: fightincowboy-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UC9N0DmacOi4iWKQyygX89OQ

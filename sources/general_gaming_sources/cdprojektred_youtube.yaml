@@ -1,0 +1,4 @@
+type: rss
+name: cd-projekt-red-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCuCtanBJXOPAEIAUXf9944g

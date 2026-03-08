@@ -1,0 +1,4 @@
+type: rss
+name: eveonline-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCBfhhX4pmpRSIg0YzTtuUOA

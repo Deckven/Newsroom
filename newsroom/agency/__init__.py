@@ -1,6 +1,6 @@
 """Newsroom Agency — multi-agent system for news gathering and analysis."""
 
-from newsroom.agency.gaming import GamingAgency
-from newsroom.agency.threebooks import ThreeBooksAgency
+from newsroom.agency.gaming import WoWCasualAgency
+from newsroom.agency.threebooks import TechnocratsAgency
 
-__all__ = ["GamingAgency", "ThreeBooksAgency"]
+__all__ = ["WoWCasualAgency", "TechnocratsAgency"]

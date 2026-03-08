@@ -1,0 +1,4 @@
+type: rss
+name: riot-games-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCJEGvSZnQ1pkVfHO8s5G8hA

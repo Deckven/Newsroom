@@ -1,0 +1,4 @@
+type: rss
+name: ea-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCoyaxd5LQSuP4ChkxK0pnZQ

@@ -1,0 +1,4 @@
+type: rss
+name: jorraptor-youtube
+feeds:
+  - https://www.youtube.com/feeds/videos.xml?channel_id=UCzF5oxzeidHOZzy4KK5nxCQ

@@ -1,8 +1,12 @@
 """
 Newsroom Agency — Base agency class.
 
-Provides the common orchestration pattern: create agents, define tasks,
-run a CrewAI sequential workflow, save session log.
+Provides the common orchestration pattern with three-tier pipeline:
+  1. Editorial  — reporters create content
+  2. Production — fact-check, edit, rewrite
+  3. Distribution — SMM, SEO, community engagement
+
+Subclasses control which tiers and roles are active.
 """
 
 from __future__ import annotations
@@ -50,7 +54,7 @@ class BaseAgency(ABC):
         context: str,
         roles: list[str] | None = None,
     ) -> list[Agent]:
-        """Create and return reporter agents for this run."""
+        """Create and return editorial agents for this run."""
 
     @abstractmethod
     def _define_reporter_tasks(
@@ -58,7 +62,11 @@ class BaseAgency(ABC):
         reporters: list[Agent],
         brief: str,
     ) -> list[Task]:
-        """Create reporter tasks (one per reporter)."""
+        """Create editorial tasks (one per reporter)."""
+
+    def _enable_distribution(self) -> bool:
+        """Override to disable distribution tier (default: enabled)."""
+        return True
 
     # -- Common workflow ----------------------------------------------------
 
@@ -67,6 +75,7 @@ class BaseAgency(ABC):
         topic: str,
         brief: str = "",
         roles: list[str] | None = None,
+        skip_distribution: bool = False,
         **kwargs: Any,
     ) -> dict[str, Any]:
         """Execute the full agency workflow.
@@ -74,17 +83,25 @@ class BaseAgency(ABC):
         Args:
             topic: Subject to cover.
             brief: Editorial brief / prompt describing what to produce.
-            roles: Optional subset of reporter roles to activate.
+            roles: Optional subset of editorial roles to activate.
+            skip_distribution: If True, skip SMM/SEO/community tier.
 
         Returns:
             Dict with ``output``, ``session_data``, ``log_file``.
         """
-        from newsroom.agency.agents import create_editor, create_fact_checker
+        from newsroom.agency.agents import (
+            create_community_manager,
+            create_editor,
+            create_fact_checker,
+            create_rewriter,
+            create_seo_specialist,
+            create_smm_manager,
+        )
 
         session_start = datetime.now()
         context = self._build_context(topic, **kwargs)
 
-        # 1. Reporters
+        # ── 1. Editorial ──────────────────────────────────────────────
         reporters = self._select_reporters(topic, context, roles)
         logger.info(
             "[%s] %d reporter(s) activated for '%s'",
@@ -96,11 +113,9 @@ class BaseAgency(ABC):
 
         reporter_tasks = self._define_reporter_tasks(reporters, brief)
 
-        # 2. Fact-checker reviews all reporter outputs
+        # ── 2. Production: Fact-check ─────────────────────────────────
         fact_checker = create_fact_checker(
-            context,
-            model=self.model,
-            base_url=self.ollama_base_url,
+            context, model=self.model, base_url=self.ollama_base_url,
         )
         task_fact_check = Task(
             description=(
@@ -116,16 +131,14 @@ class BaseAgency(ABC):
             context=reporter_tasks,
         )
 
-        # 3. Editor assembles final output
+        # ── 3. Production: Edit ───────────────────────────────────────
         editor = create_editor(
-            context,
-            style_guide=self.style_guide,
-            model=self.model,
-            base_url=self.ollama_base_url,
+            context, style_guide=self.style_guide,
+            model=self.model, base_url=self.ollama_base_url,
         )
         task_edit = Task(
             description=(
-                "Собери финальный материал на основе работы репортёров "
+                "Собери финальный материал на основе работы редакции "
                 "и замечаний фактчекера.\n\n"
                 "Требования:\n"
                 "- Убери дублирование и противоречия\n"
@@ -139,10 +152,88 @@ class BaseAgency(ABC):
             context=[task_fact_check] + reporter_tasks,
         )
 
-        # 4. Assemble crew and run
-        all_agents = reporters + [fact_checker, editor]
-        all_tasks = reporter_tasks + [task_fact_check, task_edit]
+        # ── 4. Production: Rewrite ────────────────────────────────────
+        rewriter = create_rewriter(
+            context, model=self.model, base_url=self.ollama_base_url,
+        )
+        task_rewrite = Task(
+            description=(
+                "На основе финального материала редактора создай "
+                "адаптированные версии:\n\n"
+                "1. **Короткая заметка** — 3–5 предложений, суть\n"
+                "2. **Дайджест** — буллет-поинты, ключевые факты\n"
+                "3. **Тезисы** — 5–7 главных тезисов для рассылки\n\n"
+                "Весь текст на русском языке."
+            ),
+            expected_output="Три адаптированные версии материала. На русском языке.",
+            agent=rewriter,
+            context=[task_edit],
+        )
 
+        # Collect production agents and tasks
+        all_agents = reporters + [fact_checker, editor, rewriter]
+        all_tasks = reporter_tasks + [task_fact_check, task_edit, task_rewrite]
+
+        # ── 5. Distribution (optional) ────────────────────────────────
+        run_distribution = self._enable_distribution() and not skip_distribution
+
+        if run_distribution:
+            smm = create_smm_manager(
+                context, model=self.model, base_url=self.ollama_base_url,
+            )
+            task_smm = Task(
+                description=(
+                    "На основе материала редактора и адаптаций рерайтера "
+                    "создай посты для соцсетей:\n\n"
+                    "1. **Telegram** — информативный пост с форматированием\n"
+                    "2. **Twitter/X** — тред из 2–4 твитов (до 280 символов каждый)\n"
+                    "3. **Discord** — пост для новостного канала\n\n"
+                    "Добавь хештеги и CTA для каждой платформы.\n"
+                    "Весь текст на русском языке."
+                ),
+                expected_output="Посты для Telegram, Twitter/X, Discord. На русском языке.",
+                agent=smm,
+                context=[task_edit, task_rewrite],
+            )
+
+            seo = create_seo_specialist(
+                context, model=self.model, base_url=self.ollama_base_url,
+            )
+            task_seo = Task(
+                description=(
+                    "На основе финального материала создай SEO-пакет:\n\n"
+                    "1. SEO-заголовок (до 60 символов)\n"
+                    "2. Мета-описание (до 160 символов)\n"
+                    "3. 5–10 ключевых слов/фраз\n"
+                    "4. Рекомендации по структуре H1/H2/H3\n\n"
+                    "Весь текст на русском языке."
+                ),
+                expected_output="SEO-пакет: заголовок, мета, ключевые слова, структура. На русском языке.",
+                agent=seo,
+                context=[task_edit],
+            )
+
+            community = create_community_manager(
+                context, model=self.model, base_url=self.ollama_base_url,
+            )
+            task_community = Task(
+                description=(
+                    "На основе материала создай контент для вовлечения:\n\n"
+                    "1. 2–3 дискуссионных вопроса для комментариев\n"
+                    "2. Опрос (poll) с 3–4 вариантами\n"
+                    "3. Провокационный тезис для обсуждения\n"
+                    "4. Рекомендация по таймингу публикации\n\n"
+                    "Весь текст на русском языке."
+                ),
+                expected_output="Контент для вовлечения аудитории. На русском языке.",
+                agent=community,
+                context=[task_edit, task_rewrite],
+            )
+
+            all_agents += [smm, seo, community]
+            all_tasks += [task_smm, task_seo, task_community]
+
+        # ── 6. Run crew ───────────────────────────────────────────────
         crew = Crew(
             agents=all_agents,
             tasks=all_tasks,
@@ -152,7 +243,7 @@ class BaseAgency(ABC):
 
         result = crew.kickoff()
 
-        # 5. Save session
+        # ── 7. Save session ───────────────────────────────────────────
         session_end = datetime.now()
         duration = (session_end - session_start).total_seconds()
 
@@ -162,7 +253,10 @@ class BaseAgency(ABC):
             "duration_seconds": duration,
             "topic": topic,
             "brief": brief,
-            "reporters": [a.role for a in reporters],
+            "editorial": [a.role for a in reporters],
+            "production": ["Фактчекер", "Главный редактор", "Рерайтер"],
+            "distribution": ["SMM-менеджер", "SEO-специалист", "Комьюнити-менеджер"]
+            if run_distribution else [],
             "model": self.model,
             "output": str(result),
         }
