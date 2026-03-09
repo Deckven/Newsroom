@@ -10,11 +10,24 @@ import yaml
 
 log = logging.getLogger(__name__)
 
-DEFAULTS: dict[str, Any] = {
-    "source_dirs": [
-        "sources/technology_sources",
-        "sources/videogames_sources",
+# Per-domain default source directories
+DOMAIN_SOURCE_DIRS: dict[str, list[str]] = {
+    "wowcasual": [
+        "sources/wowcasual/diablo_iv_sources",
+        "sources/wowcasual/eve_online_sources",
+        "sources/wowcasual/wow_sources",
+        "sources/wowcasual/ghost_of_yotei_sources",
+        "sources/wowcasual/general_gaming_sources",
+        "sources/wowcasual/videogames_sources",
     ],
+    "technocrats": [
+        "sources/technocrats/technology_sources",
+    ],
+}
+
+DEFAULTS: dict[str, Any] = {
+    "domain": None,  # "wowcasual" | "technocrats"
+    "source_dirs": [],
     "sources": [],
     "exporters": [],
     "processors": {
@@ -33,7 +46,8 @@ DEFAULTS: dict[str, Any] = {
         "api_key": None,
     },
     "rewriter": {
-        "corpus_path": "rewriter_corpus.db",
+        "data_dir": None,
+        "corpus_path": None,
         "intensity": "medium",
         "num_examples": 3,
         "max_article_length": 4000,
@@ -99,13 +113,40 @@ def _load_source_dirs(dirs: list[str], base_path: Path) -> list[dict]:
     return sources
 
 
-def load_config(path: str | Path) -> dict[str, Any]:
+def _resolve_domain(raw: dict[str, Any]) -> dict[str, Any]:
+    """Fill in domain-dependent defaults (source_dirs, rewriter paths)."""
+    domain = raw.get("domain")
+    if not domain:
+        return raw
+
+    # Auto-fill source_dirs if not explicitly provided
+    if "source_dirs" not in raw:
+        raw["source_dirs"] = list(DOMAIN_SOURCE_DIRS.get(domain, []))
+
+    # Auto-fill rewriter paths if not explicitly provided
+    rw = raw.setdefault("rewriter", {})
+    if "data_dir" not in rw:
+        rw["data_dir"] = f"rewriter_data/{domain}"
+    if "corpus_path" not in rw:
+        rw["corpus_path"] = f"rewriter_data/{domain}/corpus.db"
+
+    return raw
+
+
+def load_config(path: str | Path, *, domain: str | None = None) -> dict[str, Any]:
     """Load a YAML config file and merge with defaults."""
     path = Path(path)
     if not path.exists():
         raise FileNotFoundError(f"Config file not found: {path}")
     with open(path, encoding="utf-8") as fh:
         raw = yaml.safe_load(fh) or {}
+
+    # CLI domain override takes precedence
+    if domain:
+        raw["domain"] = domain
+
+    # Resolve domain-dependent defaults before merging
+    _resolve_domain(raw)
 
     # Load modular sources from directories
     source_dirs = raw.get("source_dirs", DEFAULTS["source_dirs"])
@@ -137,10 +178,15 @@ def validate_config(cfg: dict[str, Any]) -> list[str]:
         rw_api_key = rw.get("llm", {}).get("api_key")
         if not rw_api_key:
             issues.append("Rewriter is enabled but no rewriter.llm.api_key is set.")
-        corpus_path = Path(rw.get("corpus_path", "rewriter_corpus.db"))
-        if not corpus_path.exists():
+        corpus_path_str = rw.get("corpus_path")
+        if not corpus_path_str:
             issues.append(
-                f"Rewriter is enabled but corpus file '{corpus_path}' not found. "
+                "Rewriter is enabled but no corpus_path is set. "
+                "Set 'domain' or 'rewriter.corpus_path' in config."
+            )
+        elif not Path(corpus_path_str).exists():
+            issues.append(
+                f"Rewriter is enabled but corpus file '{corpus_path_str}' not found. "
                 "Run `python -m newsroom rewriter-setup import` first."
             )
     # Exporter validation

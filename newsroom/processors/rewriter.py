@@ -39,7 +39,12 @@ class StyleRewriter(BaseProcessor):
             logger.debug("Rewriter disabled: no API key configured.")
             return False
 
-        corpus_path = Path(self.config.get("corpus_path", "rewriter_corpus.db"))
+        corpus_path_str = self.config.get("corpus_path")
+        if not corpus_path_str:
+            self._init_error = "no corpus_path configured"
+            logger.debug("Rewriter disabled: no corpus_path in config.")
+            return False
+        corpus_path = Path(corpus_path_str)
         if not corpus_path.exists():
             self._init_error = "no corpus"
             logger.debug("Rewriter disabled: corpus file %s not found.", corpus_path)

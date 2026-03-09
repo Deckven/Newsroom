@@ -1,13 +1,26 @@
 # Newsroom configuration example
 # Copy to config.yaml and adjust to your needs.
 
+# ── Domain ─────────────────────────────────────────────────
+# Defines which source directories and rewriter data to use.
+# Available: wowcasual (gaming blog), technocrats (techno-futurology)
+# Can be overridden via CLI: python -m newsroom -d wowcasual ...
+domain: wowcasual
+
 # ── Source directories ───────────────────────────────────────
 # Each directory is scanned for *.yaml / *.yml files.
 # Every file should contain a single source (type at top level)
 # or multiple sources under a `sources:` key.
-source_dirs:
-  - sources/technology_sources
-  - sources/videogames_sources
+#
+# If 'domain' is set and source_dirs is omitted, directories are
+# auto-populated from the domain defaults:
+#   wowcasual:   sources/wowcasual/{diablo_iv,eve_online,wow,...}_sources
+#   technocrats: sources/technocrats/{technology,videogames}_sources
+#
+# Uncomment to override:
+# source_dirs:
+#   - sources/wowcasual/wow_sources
+#   - sources/wowcasual/general_gaming_sources
   # - sources/obsidian_sources
   # - sources/gdrive_sources
 
@@ -83,12 +96,16 @@ llm:
 # ── Rewriter (стилизация статей) ─────────────────────────────
 # Переписывает собранные новости в стиле вашего блога.
 # Перед использованием нужно:
-#   1. Импортировать корпус: python -m newsroom rewriter-setup import export.xml
-#   2. Запустить анализ стиля: python -m newsroom rewriter-setup analyze
+#   1. Импортировать корпус: python -m newsroom rewriter-setup -d DOMAIN import export.xml
+#   2. Запустить анализ стиля: python -m newsroom rewriter-setup -d DOMAIN analyze
 #   Опции анализа: --use-batch (Batch API, -50% стоимость), --resume, --cost-estimate
+#
+# Если 'domain' задан, data_dir и corpus_path заполняются автоматически:
+#   data_dir:    rewriter_data/{domain}
+#   corpus_path: rewriter_data/{domain}/corpus.db
 rewriter:
-  data_dir: rewriter_data                   # каталог с данными (style guide, corpus, модель)
-  corpus_path: rewriter_data/corpus.db      # путь к SQLite-файлу корпуса
+  # data_dir: rewriter_data/wowcasual       # авто из domain
+  # corpus_path: rewriter_data/wowcasual/corpus.db
   intensity: medium                         # light / medium / full
   num_examples: 3                           # кол-во few-shot примеров
   max_article_length: 4000                  # макс. длина статьи (символов)

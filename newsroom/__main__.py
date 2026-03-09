@@ -41,6 +41,12 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Write output to file instead of stdout",
     )
     parser.add_argument(
+        "-d", "--domain",
+        choices=["wowcasual", "technocrats"],
+        default=None,
+        help="Domain: wowcasual (gaming) or technocrats (techno-futurology)",
+    )
+    parser.add_argument(
         "-v", "--verbose",
         action="store_true",
         help="Enable verbose logging",
@@ -60,6 +66,12 @@ def _build_parser() -> argparse.ArgumentParser:
         "-c", "--config",
         default="config.yaml",
         help="Path to YAML config file (default: config.yaml)",
+    )
+    rw_parser.add_argument(
+        "-d", "--domain",
+        choices=["wowcasual", "technocrats"],
+        default=None,
+        help="Domain: wowcasual (gaming) or technocrats (techno-futurology)",
     )
     rw_parser.add_argument(
         "-v", "--verbose",
@@ -131,7 +143,7 @@ def _cmd_run(args: argparse.Namespace) -> None:
         sys.exit(1)
 
     try:
-        config = load_config(args.config)
+        config = load_config(args.config, domain=args.domain)
     except FileNotFoundError as exc:
         print(f"Error: {exc}", file=sys.stderr)
         sys.exit(1)
@@ -164,7 +176,7 @@ def _cmd_rewriter_setup(args: argparse.Namespace) -> None:
     logger = logging.getLogger("newsroom")
 
     try:
-        config = load_config(args.config)
+        config = load_config(args.config, domain=args.domain)
     except FileNotFoundError as exc:
         print(f"Error: {exc}", file=sys.stderr)
         sys.exit(1)
