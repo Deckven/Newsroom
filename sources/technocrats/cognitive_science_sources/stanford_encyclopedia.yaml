@@ -1,0 +1,4 @@
+type: rss
+name: stanford-encyclopedia-philosophy
+feeds:
+  - https://plato.stanford.edu/rss/sep.xml

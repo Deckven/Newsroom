@@ -1,0 +1,4 @@
+type: rss
+name: henry-jenkins
+feeds:
+  - https://henryjenkins.org/feed

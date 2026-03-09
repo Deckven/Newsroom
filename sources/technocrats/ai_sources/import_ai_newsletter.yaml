@@ -1,0 +1,4 @@
+type: rss
+name: import-ai-newsletter
+feeds:
+  - https://importai.substack.com/feed

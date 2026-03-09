@@ -1,0 +1,4 @@
+type: rss
+name: reddit-geoengineering
+feeds:
+  - https://www.reddit.com/r/geoengineering/.rss

@@ -1,0 +1,4 @@
+type: rss
+name: reddit-chipdesign
+feeds:
+  - https://www.reddit.com/r/chipdesign/.rss

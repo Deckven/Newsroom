@@ -1,0 +1,4 @@
+type: rss
+name: shtetl-optimized-scott-aaronson
+feeds:
+  - https://scottaaronson.blog/?feed=rss2

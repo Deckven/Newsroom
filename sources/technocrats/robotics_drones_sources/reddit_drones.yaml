@@ -1,0 +1,4 @@
+type: rss
+name: reddit-drones
+feeds:
+  - https://www.reddit.com/r/drones/.rss

@@ -1,0 +1,4 @@
+type: rss
+name: reddit-simulation
+feeds:
+  - https://www.reddit.com/r/simulation/.rss

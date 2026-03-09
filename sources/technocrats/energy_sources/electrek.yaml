@@ -1,0 +1,4 @@
+type: rss
+name: electrek
+feeds:
+  - https://electrek.co/feed/

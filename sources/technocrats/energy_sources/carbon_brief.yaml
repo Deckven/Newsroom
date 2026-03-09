@@ -1,0 +1,4 @@
+type: rss
+name: carbon-brief
+feeds:
+  - https://www.carbonbrief.org/feed/

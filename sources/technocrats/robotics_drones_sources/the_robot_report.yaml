@@ -1,0 +1,4 @@
+type: rss
+name: the-robot-report
+feeds:
+  - https://www.therobotreport.com/feed/

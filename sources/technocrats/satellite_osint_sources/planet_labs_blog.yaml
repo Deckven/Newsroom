@@ -1,0 +1,4 @@
+type: rss
+name: planet-labs-blog
+feeds:
+  - https://www.planet.com/pulse/feed/

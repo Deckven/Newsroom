@@ -1,0 +1,4 @@
+type: rss
+name: gretel-ai
+feeds:
+  - https://gretel.ai/blog/rss.xml

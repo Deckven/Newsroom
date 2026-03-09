@@ -1,0 +1,4 @@
+type: rss
+name: the-spoon
+feeds:
+  - https://thespoon.tech/feed/

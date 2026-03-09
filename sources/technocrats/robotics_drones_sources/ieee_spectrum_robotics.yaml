@@ -1,0 +1,4 @@
+type: rss
+name: ieee-spectrum-robotics
+feeds:
+  - https://spectrum.ieee.org/feeds/topic/robotics.rss

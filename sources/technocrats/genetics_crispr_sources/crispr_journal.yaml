@@ -1,0 +1,4 @@
+type: rss
+name: crispr-journal
+feeds:
+  - https://www.liebertpub.com/action/showFeed?type=etoc&feed=rss&jc=crispr

@@ -1,0 +1,4 @@
+type: rss
+name: strong-towns
+feeds:
+  - https://www.strongtowns.org/journal?format=rss

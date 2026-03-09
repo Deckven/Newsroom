@@ -1,0 +1,4 @@
+type: rss
+name: reddit-languagetechnology
+feeds:
+  - https://www.reddit.com/r/LanguageTechnology/.rss

@@ -1,0 +1,4 @@
+type: rss
+name: ginkgo-bioworks-blog
+feeds:
+  - https://www.ginkgobioworks.com/feed/

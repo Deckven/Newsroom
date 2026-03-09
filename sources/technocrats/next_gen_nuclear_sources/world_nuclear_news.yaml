@@ -1,0 +1,4 @@
+type: rss
+name: world-nuclear-news
+feeds:
+  - https://world-nuclear-news.org/rss

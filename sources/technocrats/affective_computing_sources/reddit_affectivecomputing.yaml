@@ -1,0 +1,4 @@
+type: rss
+name: reddit-affectivecomputing
+feeds:
+  - https://www.reddit.com/r/affectivecomputing/.rss

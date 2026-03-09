@@ -1,0 +1,4 @@
+type: rss
+name: esa-news
+feeds:
+  - https://www.esa.int/rssfeed/Our_Activities/Space_Science

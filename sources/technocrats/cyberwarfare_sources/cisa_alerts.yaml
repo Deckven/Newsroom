@@ -1,0 +1,4 @@
+type: rss
+name: cisa-alerts
+feeds:
+  - https://www.cisa.gov/cybersecurity-advisories/all.xml

@@ -1,0 +1,4 @@
+type: rss
+name: reddit-cellularcultured
+feeds:
+  - https://www.reddit.com/r/cellularcultured/.rss

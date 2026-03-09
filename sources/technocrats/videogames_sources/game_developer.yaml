@@ -1,0 +1,4 @@
+type: rss
+name: game-developer
+feeds:
+  - https://www.gamedeveloper.com/rss.xml

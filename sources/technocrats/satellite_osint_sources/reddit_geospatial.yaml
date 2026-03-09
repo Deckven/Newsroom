@@ -1,0 +1,4 @@
+type: rss
+name: reddit-geospatial
+feeds:
+  - https://www.reddit.com/r/geospatial/.rss

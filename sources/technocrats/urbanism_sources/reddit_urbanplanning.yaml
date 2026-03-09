@@ -1,0 +1,4 @@
+type: rss
+name: reddit-urbanplanning
+feeds:
+  - https://www.reddit.com/r/urbanplanning/.rss

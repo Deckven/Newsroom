@@ -1,0 +1,4 @@
+type: rss
+name: sp-global-commodity-insights
+feeds:
+  - https://www.spglobal.com/commodityinsights/en/rss-feed/metals

@@ -1,0 +1,4 @@
+type: rss
+name: reddit-osint
+feeds:
+  - https://www.reddit.com/r/OSINT/.rss

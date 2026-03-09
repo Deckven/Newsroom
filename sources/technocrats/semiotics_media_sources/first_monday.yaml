@@ -1,0 +1,4 @@
+type: rss
+name: first-monday
+feeds:
+  - https://firstmonday.org/ojs/index.php/fm/gateway/plugin/WebFeedGatewayPlugin/atom

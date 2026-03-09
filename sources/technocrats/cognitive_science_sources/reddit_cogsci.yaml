@@ -1,0 +1,4 @@
+type: rss
+name: reddit-cogsci
+feeds:
+  - https://www.reddit.com/r/cogsci/.rss

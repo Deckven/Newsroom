@@ -1,0 +1,4 @@
+type: rss
+name: krebs-on-security
+feeds:
+  - https://krebsonsecurity.com/feed/

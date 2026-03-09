@@ -1,0 +1,4 @@
+type: rss
+name: dark-reading
+feeds:
+  - https://www.darkreading.com/rss.xml

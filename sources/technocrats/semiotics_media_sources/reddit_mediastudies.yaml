@@ -1,0 +1,4 @@
+type: rss
+name: reddit-mediastudies
+feeds:
+  - https://www.reddit.com/r/MediaStudies/.rss

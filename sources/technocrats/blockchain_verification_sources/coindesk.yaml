@@ -1,0 +1,4 @@
+type: rss
+name: coindesk
+feeds:
+  - https://www.coindesk.com/arc/outboundfeeds/rss/

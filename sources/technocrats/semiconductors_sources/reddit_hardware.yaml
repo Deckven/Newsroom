@@ -1,0 +1,4 @@
+type: rss
+name: reddit-hardware
+feeds:
+  - https://www.reddit.com/r/hardware/.rss

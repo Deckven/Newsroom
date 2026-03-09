@@ -1,0 +1,4 @@
+type: rss
+name: arxiv-computation-language
+feeds:
+  - https://rss.arxiv.org/rss/cs.CL

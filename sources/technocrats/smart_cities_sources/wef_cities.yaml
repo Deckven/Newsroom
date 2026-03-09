@@ -1,0 +1,4 @@
+type: rss
+name: wef-cities
+feeds:
+  - https://www.weforum.org/topics/cities-and-urbanization/feed

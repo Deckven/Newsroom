@@ -1,0 +1,4 @@
+type: rss
+name: schneier-on-security
+feeds:
+  - https://www.schneier.com/feed/atom/

@@ -1,0 +1,4 @@
+type: rss
+name: stat-news-health
+feeds:
+  - https://www.statnews.com/feed/

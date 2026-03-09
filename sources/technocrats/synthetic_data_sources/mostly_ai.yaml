@@ -1,0 +1,4 @@
+type: rss
+name: mostly-ai
+feeds:
+  - https://mostly.ai/blog/feed

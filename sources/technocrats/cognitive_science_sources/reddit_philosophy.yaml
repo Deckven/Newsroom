@@ -1,0 +1,4 @@
+type: rss
+name: reddit-philosophy
+feeds:
+  - https://www.reddit.com/r/philosophy/.rss

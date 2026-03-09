@@ -1,0 +1,4 @@
+type: rss
+name: arxiv-cs-lg
+feeds:
+  - https://rss.arxiv.org/rss/cs.LG

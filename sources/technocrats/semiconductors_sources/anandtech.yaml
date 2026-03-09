@@ -1,0 +1,4 @@
+type: rss
+name: anandtech
+feeds:
+  - https://www.anandtech.com/rss/

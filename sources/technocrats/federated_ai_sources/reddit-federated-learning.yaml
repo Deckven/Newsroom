@@ -1,0 +1,4 @@
+type: rss
+name: reddit-federated-learning
+feeds:
+  - https://www.reddit.com/r/FederatedLearning/.rss

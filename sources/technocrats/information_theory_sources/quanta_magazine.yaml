@@ -1,0 +1,4 @@
+type: rss
+name: quanta-magazine
+feeds:
+  - https://api.quantamagazine.org/feed/

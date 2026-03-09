@@ -1,0 +1,4 @@
+type: rss
+name: reddit-genetics
+feeds:
+  - https://www.reddit.com/r/genetics/.rss

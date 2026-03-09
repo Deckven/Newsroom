@@ -1,0 +1,4 @@
+type: rss
+name: bellingcat
+feeds:
+  - https://www.bellingcat.com/feed/

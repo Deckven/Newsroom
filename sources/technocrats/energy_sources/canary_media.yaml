@@ -1,0 +1,4 @@
+type: rss
+name: canary-media
+feeds:
+  - https://www.canarymedia.com/feed

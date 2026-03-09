@@ -1,0 +1,4 @@
+type: rss
+name: reddit-3dprinting
+feeds:
+  - https://www.reddit.com/r/3Dprinting/.rss

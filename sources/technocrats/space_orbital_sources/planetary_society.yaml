@@ -1,0 +1,4 @@
+type: rss
+name: planetary-society
+feeds:
+  - https://www.planetary.org/feed

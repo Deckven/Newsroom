@@ -1,0 +1,4 @@
+type: rss
+name: iea-news
+feeds:
+  - https://www.iea.org/rss/news.xml

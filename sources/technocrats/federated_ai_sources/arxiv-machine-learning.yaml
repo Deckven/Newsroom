@@ -1,0 +1,4 @@
+type: rss
+name: arxiv-machine-learning
+feeds:
+  - https://rss.arxiv.org/rss/cs.LG

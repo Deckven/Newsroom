@@ -1,0 +1,4 @@
+type: rss
+name: neurotechnology-news
+feeds:
+  - https://www.neurotechnology.com/rss/news.xml

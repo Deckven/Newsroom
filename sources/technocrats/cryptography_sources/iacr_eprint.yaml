@@ -1,0 +1,4 @@
+type: rss
+name: iacr-eprint
+feeds:
+  - https://eprint.iacr.org/rss/rss.xml

@@ -1,0 +1,4 @@
+type: rss
+name: kotaku
+feeds:
+  - https://kotaku.com/rss

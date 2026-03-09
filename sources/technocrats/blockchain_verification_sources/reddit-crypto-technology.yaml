@@ -1,0 +1,4 @@
+type: rss
+name: reddit-crypto-technology
+feeds:
+  - https://www.reddit.com/r/crypto_technology/.rss

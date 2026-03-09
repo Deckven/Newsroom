@@ -1,0 +1,4 @@
+type: rss
+name: usgs-mineral-resources
+feeds:
+  - https://www.usgs.gov/news/feed

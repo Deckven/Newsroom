@@ -1,0 +1,4 @@
+type: rss
+name: ansys-blog
+feeds:
+  - https://www.ansys.com/blog/feed

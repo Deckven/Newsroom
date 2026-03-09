@@ -1,0 +1,4 @@
+type: rss
+name: reddit-informationtheory
+feeds:
+  - https://www.reddit.com/r/informationtheory/.rss

@@ -1,0 +1,4 @@
+type: rss
+name: reddit-quantumcomputing
+feeds:
+  - https://www.reddit.com/r/QuantumComputing/.rss

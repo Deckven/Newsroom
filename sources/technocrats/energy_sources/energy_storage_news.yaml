@@ -1,0 +1,4 @@
+type: rss
+name: energy-storage-news
+feeds:
+  - https://www.energy-storage.news/feed/

@@ -1,0 +1,4 @@
+type: rss
+name: reddit-truegaming
+feeds:
+  - https://www.reddit.com/r/truegaming/.rss

@@ -1,0 +1,4 @@
+type: rss
+name: nvidia-omniverse
+feeds:
+  - https://blogs.nvidia.com/feed/

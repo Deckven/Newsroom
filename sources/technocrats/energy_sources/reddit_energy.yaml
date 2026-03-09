@@ -1,0 +1,4 @@
+type: rss
+name: reddit-energy
+feeds:
+  - https://www.reddit.com/r/energy/.rss

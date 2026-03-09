@@ -1,0 +1,4 @@
+type: rss
+name: atomic-insights
+feeds:
+  - https://atomicinsights.com/feed/

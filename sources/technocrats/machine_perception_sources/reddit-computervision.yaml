@@ -1,0 +1,4 @@
+type: rss
+name: reddit-computervision
+feeds:
+  - https://www.reddit.com/r/computervision/.rss

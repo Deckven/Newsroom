@@ -1,0 +1,4 @@
+type: rss
+name: roboflow
+feeds:
+  - https://blog.roboflow.com/rss/

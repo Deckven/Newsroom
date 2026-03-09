@@ -1,0 +1,4 @@
+type: rss
+name: reddit-ethereum
+feeds:
+  - https://www.reddit.com/r/ethereum/.rss

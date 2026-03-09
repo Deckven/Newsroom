@@ -1,0 +1,4 @@
+type: rss
+name: hume-ai
+feeds:
+  - https://www.hume.ai/blog/rss.xml

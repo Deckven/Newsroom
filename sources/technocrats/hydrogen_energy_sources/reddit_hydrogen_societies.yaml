@@ -1,0 +1,4 @@
+type: rss
+name: reddit-hydrogen-societies
+feeds:
+  - https://www.reddit.com/r/HydrogenSocieties/.rss

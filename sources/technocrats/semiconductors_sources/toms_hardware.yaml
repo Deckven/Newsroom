@@ -1,0 +1,4 @@
+type: rss
+name: toms-hardware
+feeds:
+  - https://www.tomshardware.com/feeds/all

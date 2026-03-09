@@ -1,0 +1,4 @@
+type: rss
+name: reddit-neuromorphic
+feeds:
+  - https://www.reddit.com/r/neuromorphic/.rss

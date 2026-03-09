@@ -1,0 +1,4 @@
+type: rss
+name: planetizen
+feeds:
+  - https://www.planetizen.com/feed

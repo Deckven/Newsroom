@@ -1,0 +1,4 @@
+type: rss
+name: reddit-spacex
+feeds:
+  - https://www.reddit.com/r/SpaceX/.rss

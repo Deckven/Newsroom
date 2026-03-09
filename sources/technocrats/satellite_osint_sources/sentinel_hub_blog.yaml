@@ -1,0 +1,4 @@
+type: rss
+name: sentinel-hub-blog
+feeds:
+  - https://www.sentinel-hub.com/blog/rss/

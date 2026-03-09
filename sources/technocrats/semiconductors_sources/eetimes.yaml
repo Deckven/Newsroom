@@ -1,0 +1,4 @@
+type: rss
+name: eetimes
+feeds:
+  - https://www.eetimes.com/feed/

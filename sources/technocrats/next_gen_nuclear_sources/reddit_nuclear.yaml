@@ -1,0 +1,4 @@
+type: rss
+name: reddit-nuclear
+feeds:
+  - https://www.reddit.com/r/nuclear/.rss

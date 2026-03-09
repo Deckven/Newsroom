@@ -1,0 +1,4 @@
+type: rss
+name: reddit-neuralink
+feeds:
+  - https://www.reddit.com/r/Neuralink/.rss

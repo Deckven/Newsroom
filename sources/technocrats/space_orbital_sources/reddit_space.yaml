@@ -1,0 +1,4 @@
+type: rss
+name: reddit-space
+feeds:
+  - https://www.reddit.com/r/space/.rss

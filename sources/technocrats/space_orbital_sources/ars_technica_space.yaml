@@ -1,0 +1,4 @@
+type: rss
+name: ars-technica-space
+feeds:
+  - https://feeds.arstechnica.com/arstechnica/science

@@ -1,0 +1,4 @@
+type: rss
+name: nasa-spaceflight
+feeds:
+  - https://www.nasaspaceflight.com/feed/

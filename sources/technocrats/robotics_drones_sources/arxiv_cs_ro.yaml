@@ -1,0 +1,4 @@
+type: rss
+name: arxiv-cs-robotics
+feeds:
+  - https://rss.arxiv.org/rss/cs.RO

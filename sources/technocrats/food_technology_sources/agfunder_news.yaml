@@ -1,0 +1,4 @@
+type: rss
+name: agfunder-news
+feeds:
+  - https://agfundernews.com/feed

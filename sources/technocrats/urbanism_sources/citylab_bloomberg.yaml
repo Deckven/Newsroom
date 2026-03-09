@@ -1,0 +1,4 @@
+type: rss
+name: citylab-bloomberg
+feeds:
+  - https://www.bloomberg.com/citylab/feed/

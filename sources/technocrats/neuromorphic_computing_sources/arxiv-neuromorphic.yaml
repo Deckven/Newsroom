@@ -1,0 +1,4 @@
+type: rss
+name: arxiv-neuromorphic
+feeds:
+  - https://rss.arxiv.org/rss/cs.NE

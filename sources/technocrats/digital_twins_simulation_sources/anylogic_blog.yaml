@@ -1,0 +1,4 @@
+type: rss
+name: anylogic-blog
+feeds:
+  - https://www.anylogic.com/blog/feed/

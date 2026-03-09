@@ -1,0 +1,4 @@
+type: rss
+name: arxiv-optics
+feeds:
+  - https://rss.arxiv.org/rss/physics.optics

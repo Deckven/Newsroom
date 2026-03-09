@@ -1,0 +1,4 @@
+type: rss
+name: genomeweb
+feeds:
+  - https://www.genomeweb.com/rss

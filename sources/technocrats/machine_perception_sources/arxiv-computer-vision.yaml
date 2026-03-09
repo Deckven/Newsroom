@@ -1,0 +1,4 @@
+type: rss
+name: arxiv-computer-vision
+feeds:
+  - https://rss.arxiv.org/rss/cs.CV

@@ -1,0 +1,4 @@
+type: rss
+name: smart-cities-world
+feeds:
+  - https://www.smartcitiesworld.net/rss/rss.xml

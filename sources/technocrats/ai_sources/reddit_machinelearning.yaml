@@ -1,0 +1,4 @@
+type: rss
+name: reddit-machinelearning
+feeds:
+  - https://www.reddit.com/r/MachineLearning/.rss

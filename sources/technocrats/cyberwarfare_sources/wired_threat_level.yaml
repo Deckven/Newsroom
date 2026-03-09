@@ -1,0 +1,4 @@
+type: rss
+name: wired-threat-level
+feeds:
+  - https://www.wired.com/feed/category/security/latest/rss
