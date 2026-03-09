@@ -78,7 +78,19 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     # rewriter-setup analyze
-    rw_sub.add_parser("analyze", help="Run style analysis on the corpus")
+    analyze_parser = rw_sub.add_parser("analyze", help="Run style analysis on the corpus")
+    analyze_parser.add_argument(
+        "--use-batch", action="store_true", default=False,
+        help="Use Anthropic Batch API (50%% cost savings, slower)",
+    )
+    analyze_parser.add_argument(
+        "--resume", action="store_true", default=False,
+        help="Resume from existing chunk analyses if available",
+    )
+    analyze_parser.add_argument(
+        "--cost-estimate", action="store_true", default=False,
+        help="Only estimate cost, do not run analysis",
+    )
 
     # rewriter-setup stats
     rw_sub.add_parser("stats", help="Show corpus statistics")
@@ -166,7 +178,7 @@ def _cmd_rewriter_setup(args: argparse.Namespace) -> None:
     if args.rw_action == "import":
         _rewriter_import(settings, args, logger)
     elif args.rw_action == "analyze":
-        _rewriter_analyze(settings, logger)
+        _rewriter_analyze(settings, args, logger)
     elif args.rw_action == "stats":
         _rewriter_stats(settings)
     else:
@@ -195,7 +207,7 @@ def _rewriter_import(settings, args, logger) -> None:
         store.close()
 
 
-def _rewriter_analyze(settings, logger) -> None:
+def _rewriter_analyze(settings, args, logger) -> None:
     """Run style analysis on the corpus."""
     from newsroom.rewriter.analyzer.examples import ExampleSelector
     from newsroom.rewriter.analyzer.style_extractor import StyleExtractor
@@ -203,9 +215,23 @@ def _rewriter_analyze(settings, logger) -> None:
 
     store = CorpusStore(settings.db_path)
     try:
-        # Step 1: Extract style guide
         extractor = StyleExtractor(settings, store)
-        guide = extractor.run()
+
+        # Cost estimate only
+        if getattr(args, "cost_estimate", False):
+            est = extractor.estimate_cost()
+            print(f"Sample size:       {est['sample_size']} articles")
+            print(f"Chunks:            {est['n_chunks']}")
+            print(f"Input tokens:      {est['total_input_tokens']:,}")
+            print(f"Output tokens:     {est['total_output_tokens']:,}")
+            print(f"Cost (Batch API):  ${est['estimated_cost_batch']:.2f}")
+            print(f"Cost (Direct API): ${est['estimated_cost_direct']:.2f}")
+            return
+
+        # Step 1: Extract style guide
+        use_batch = getattr(args, "use_batch", False)
+        resume = getattr(args, "resume", False)
+        guide = extractor.run(use_batch=use_batch, resume=resume)
         logger.info("Style guide version %d created.", guide.version)
 
         # Step 2: Build example clusters

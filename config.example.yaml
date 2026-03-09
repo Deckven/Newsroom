@@ -85,8 +85,10 @@ llm:
 # Перед использованием нужно:
 #   1. Импортировать корпус: python -m newsroom rewriter-setup import export.xml
 #   2. Запустить анализ стиля: python -m newsroom rewriter-setup analyze
+#   Опции анализа: --use-batch (Batch API, -50% стоимость), --resume, --cost-estimate
 rewriter:
-  corpus_path: rewriter_corpus.db          # путь к SQLite-файлу корпуса
+  data_dir: rewriter_data                   # каталог с данными (style guide, corpus, модель)
+  corpus_path: rewriter_data/corpus.db      # путь к SQLite-файлу корпуса
   intensity: medium                         # light / medium / full
   num_examples: 3                           # кол-во few-shot примеров
   max_article_length: 4000                  # макс. длина статьи (символов)

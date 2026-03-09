@@ -30,17 +30,24 @@ class StyleExtractor:
         self.store = store
         self.llm = LLMClient(settings)
 
-    def run(self, *, resume: bool = False) -> StyleGuide:
+    def run(
+        self,
+        *,
+        use_batch: bool = True,
+        resume: bool = False,
+    ) -> StyleGuide:
         """Execute the full analysis pipeline.
 
         1. Stratified sample
-        2. Chunk analysis (sequential)
+        2. Chunk analysis (batch or sequential)
         3. Synthesis into style guide
         """
         # Step 1: Sample
         articles = self.store.get_all_articles()
         if not articles:
-            raise RuntimeError("No articles in corpus. Import articles first.")
+            raise RuntimeError(
+                "No articles in corpus. Run `python -m newsroom rewriter-setup import` first."
+            )
 
         sample = stratified_sample(articles, self.settings)
         logger.info(
@@ -55,10 +62,10 @@ class StyleExtractor:
                 logger.info("Resuming: found %d existing chunk analyses", len(existing))
                 chunk_analyses = existing
             else:
-                chunk_analyses = self._analyze_chunks(sample)
+                chunk_analyses = self._analyze_chunks(sample, use_batch=use_batch)
         else:
             self.store.clear_analyses()
-            chunk_analyses = self._analyze_chunks(sample)
+            chunk_analyses = self._analyze_chunks(sample, use_batch=use_batch)
 
         # Step 3: Synthesis
         guide = self._synthesize(chunk_analyses, sample_size=len(sample))
@@ -73,28 +80,85 @@ class StyleExtractor:
 
         return guide
 
-    def _analyze_chunks(self, sample: list[Article]) -> list[ChunkAnalysis]:
-        """Run chunk-level analysis (sequential only, no batch API)."""
+    def estimate_cost(self) -> dict[str, Any]:
+        """Estimate the cost of running analysis."""
+        articles = self.store.get_all_articles()
+        sample = stratified_sample(articles, self.settings)
+
+        chunks = chunk_articles(sample, self.settings, self.llm.count_tokens)
+
+        total_input_tokens = 0
+        for chunk in chunks:
+            articles_text = self._format_chunk(chunk)
+            prompt_text = CHUNK_ANALYSIS_SYSTEM + CHUNK_ANALYSIS_USER.format(
+                articles_text=articles_text
+            )
+            total_input_tokens += self.llm.count_tokens(prompt_text)
+
+        est_output_per_chunk = 2000
+        chunk_output_tokens = len(chunks) * est_output_per_chunk
+
+        synthesis_input = total_input_tokens // 4
+        synthesis_output = 4000
+
+        total_input = total_input_tokens + synthesis_input
+        total_output = chunk_output_tokens + synthesis_output
+
+        cost_batch = self.llm.estimate_cost(total_input, total_output, batch=True)
+        cost_direct = self.llm.estimate_cost(total_input, total_output, batch=False)
+
+        return {
+            "sample_size": len(sample),
+            "n_chunks": len(chunks),
+            "total_input_tokens": total_input,
+            "total_output_tokens": total_output,
+            "estimated_cost_batch": cost_batch,
+            "estimated_cost_direct": cost_direct,
+        }
+
+    def _analyze_chunks(
+        self,
+        sample: list[Article],
+        *,
+        use_batch: bool,
+    ) -> list[ChunkAnalysis]:
+        """Run chunk-level analysis (batch or sequential)."""
         chunks = chunk_articles(sample, self.settings, self.llm.count_tokens)
         logger.info("Split into %d chunks for analysis", len(chunks))
 
-        analyses = []
+        # Build requests
+        requests = []
         for i, chunk in enumerate(chunks):
             articles_text = self._format_chunk(chunk)
-            logger.info("Analyzing chunk %d/%d...", i + 1, len(chunks))
-
-            text = self.llm.complete(
-                system=CHUNK_ANALYSIS_SYSTEM,
-                messages=[
+            requests.append({
+                "custom_id": f"chunk_{i}",
+                "system": CHUNK_ANALYSIS_SYSTEM,
+                "messages": [
                     {
                         "role": "user",
                         "content": CHUNK_ANALYSIS_USER.format(articles_text=articles_text),
                     }
                 ],
-                max_tokens=4096,
-                temperature=0.3,
-            )
+            })
 
+        # Execute
+        if use_batch:
+            from newsroom.rewriter.batch import BatchProcessor
+
+            batch = BatchProcessor(self.settings)
+            try:
+                results = batch.submit_and_wait(requests)
+            except Exception as e:
+                logger.warning("Batch API failed (%s), falling back to sequential", e)
+                results = batch.fallback_sequential(requests)
+        else:
+            results = self._run_sequential(requests)
+
+        # Save chunk analyses
+        analyses = []
+        for i, chunk in enumerate(chunks):
+            custom_id = f"chunk_{i}"
+            text = results.get(custom_id, "")
             analysis = ChunkAnalysis(
                 chunk_id=i,
                 article_ids=[a.id for a in chunk if a.id],
@@ -105,6 +169,20 @@ class StyleExtractor:
             analyses.append(analysis)
 
         return analyses
+
+    def _run_sequential(self, requests: list[dict[str, Any]]) -> dict[str, str]:
+        """Run requests one by one (no batch API)."""
+        results: dict[str, str] = {}
+        for i, req in enumerate(requests):
+            logger.info("Analyzing chunk %s (%d/%d)...", req["custom_id"], i + 1, len(requests))
+            text = self.llm.complete(
+                system=req.get("system", ""),
+                messages=req["messages"],
+                max_tokens=4096,
+                temperature=0.3,
+            )
+            results[req["custom_id"]] = text
+        return results
 
     def _synthesize(
         self,
