@@ -12,7 +12,8 @@
 4. [Рабочие процессы для финтех-компании](#4-рабочие-процессы-для-финтех-компании)
 5. [Безопасность и комплаенс](#5-безопасность-и-комплаенс)
 6. [Кейсы финтех-компаний](#6-кейсы-финтех-компаний)
-7. [Источники](#7-источники)
+7. [Стратегическое внедрение: от пилота к эксплуатации](#7-стратегическое-внедрение-от-пилота-к-эксплуатации)
+8. [Источники](#8-источники)
 
 ---
 
@@ -33,7 +34,7 @@ AI-ассистент, встроенный непосредственно в п
 - **Google Meet** — автоматические заметки, перевод субтитров (100+ языков), улучшение звука/изображения
 - **Google Chat** — суммаризация разговоров, автоматический перевод
 
-**Ключевая особенность**: С января 2025 года Gemini включён во ВСЕ тарифы Workspace (ранее был отдельным платным аддоном).
+**Ключевая особенность**: С января 2025 года Gemini включён во все тарифы Workspace (ранее был отдельным платным аддоном). Однако объём AI-функций сильно зависит от тарифа: Business Starter получает лишь минимальный набор (Vids, Workspace Studio), а полноценные AI-фичи (Help me write, side panels, Meet заметки) начинаются с Business Standard.
 
 ### 1.2 Gemini Enterprise (Google Cloud)
 
@@ -41,7 +42,7 @@ AI-ассистент, встроенный непосредственно в п
 
 **5 основных компонентов:**
 
-1. **Advanced Intelligence** — на базе моделей Gemini 2.5 Pro/Flash, Gemini 3 Pro/Flash, Gemini 3.1 Pro
+1. **Advanced Intelligence** — на базе моделей Gemini 3 Pro/Flash, Gemini 3.1 Pro (а также Gemini 2.5 Pro/Flash через Vertex AI)
 2. **Pre-built Agents** (Made by Google):
    - **Deep Research** — исследует сотни сайтов, создаёт детальные отчёты
    - **NotebookLM Enterprise** — суммаризация PDF, Docs, Slides с enterprise-безопасностью
@@ -65,9 +66,38 @@ AI-ассистент, встроенный непосредственно в п
 
 Дополнительный продукт для работы с курированными источниками:
 - Загружаете PDF, Google Docs, URL → NotebookLM становится экспертом по этим данным
-- Ответы строго в рамках загруженных источников с цитатами
+- Ответы строго в рамках загруженных источников с цитатами на конкретные страницы и абзацы — исключает галлюцинации
 - Enterprise-версия с расширенной безопасностью
 - Дополняет Gemini Enterprise: GE находит источники → NotebookLM глубоко анализирует
+
+### 1.5 Архитектура агентной платформы
+
+#### Grounding (заземление на данных)
+
+Ключевая концепция Gemini Enterprise — **Grounding**: агент подключается к корпоративным данным через коннекторы (Google Drive, Salesforce, SAP, BigQuery) и отвечает строго на основе этих данных, а не генерирует ответы «из головы». Это критически важно для финтеха, где точность данных и отсутствие галлюцинаций — обязательное требование.
+
+#### Model Context Protocol (MCP)
+
+**MCP** — стандартизированный протокол для подключения AI к специфическим API и базам данных. Обеспечивает безопасный интерфейс между моделью и внешними инструментами (банковские API, CRM, системы документооборота). Позволяет разработчикам определять кастомные функции (например, `check_credit_limit`, `verify_kyc_status`), которые модель Gemini вызывает по мере необходимости.
+
+#### Vertex AI Agent Engine
+
+Среда исполнения для pro-code агентов, обеспечивающая:
+- Масштабируемость и безопасность корпоративного уровня
+- Управление сессиями, состоянием и мониторингом
+- Интеграцию с IAM-ролями (например, `Discovery Engine Editor`)
+- Деплой через `adk deploy agent-engine`
+
+### 1.6 Agent Designer vs. Agent Development Kit (ADK)
+
+| Критерий | Agent Designer (No-code) | ADK (Pro-code) |
+|----------|-------------------------|----------------|
+| **Целевая аудитория** | Бизнес-пользователи, аналитики | Профессиональные разработчики, ML-инженеры |
+| **Навыки** | Не требует программирования | Python/Java, API, облачная архитектура |
+| **Возможности** | Визуальный конструктор, промпты на естественном языке, 30+ коннекторов, Agent Gallery | Полный контроль логики, многоагентные системы, любые API/БД, Vertex AI Agent Engine |
+| **Ограничения** | Ограниченная кастомизация, закрытый набор инструментов | Высокий порог входа, длительный цикл разработки |
+| **Задачи** | Чат-боты, отчёты, прототипирование | Fraud detection, интеграция с on-premise БД, сложная бизнес-логика |
+| **Развёртывание** | Agent Gallery | Agent Engine → Agent Gallery |
 
 ## Интеграции Gemini Enterprise
 
@@ -81,6 +111,31 @@ Confluence, Jira, Microsoft SharePoint, ServiceNow, Slack, Zendesk, Salesforce
 Box, Dropbox, GitHub, HubSpot, Linear, Notion, Monday.com, Shopify
 
 Поддерживаются также **custom connectors**.
+
+### Архитектура коннекторов (Permissions-Aware)
+
+Коннекторы Gemini Enterprise работают с учётом прав доступа — **permissions-aware**. Два пользователя получат разные ответы на один запрос в соответствии с их правами в исходной системе.
+
+**Технический механизм:**
+
+1. **Извлечение (Fetch)**: сбор контента и метаданных из внешней системы
+2. **Преобразование (Transform)**: конвертация в формат Document для Discovery Engine, включая **списки контроля доступа (ACL)**
+3. **Синхронизация (Sync)**: загрузка и обновление данных в Data Store
+
+**Обеспечение прав доступа:**
+- **Прямые ACL**: для каждого документа указываются списки пользователей/групп с правом просмотра
+- **Identity Mapping**: сопоставление внешних идентификаторов (Active Directory, Jira) с аккаунтами Google Workspace через Identity Mapping Store API
+
+**Два режима доступа к данным:**
+- **Federated search** (федеративный поиск) — запрос в реальном времени без копирования данных. Гарантирует актуальность, но может влиять на скорость
+- **Data ingestion** (индексирование) — копирование и индексация в Data Store. Более быстрый и глубокий анализ, но требует расписания синхронизации
+
+Для финтеха выбор между режимами позволяет гибко балансировать между производительностью и требованиями к локализации данных.
+
+**Протоколы аутентификации:**
+- **OAuth 2.0** — стандарт для облачных сервисов (Jira Cloud, Confluence Cloud). Администратор создаёт OAuth 2.0 приложение, настраивает scopes, получает Client ID/Secret
+- **SAML 2.0** — для федерации удостоверений с корпоративным IdP (Okta, Azure AD)
+- **On-premise**: гибридное подключение через Hybrid Network Endpoint Group (NEG) + внутренний балансировщик нагрузки, аутентификация через API-ключи или Kerberos
 
 ---
 
@@ -99,23 +154,27 @@ Box, Dropbox, GitHub, HubSpot, Linear, Notion, Monday.com, Shopify
 | Business Standard | $16.80/user/mo | $14/user/mo | 2 TB/user |
 | Business Plus | $26.40/user/mo | $22/user/mo | 5 TB/user |
 
-### Enterprise (300+ пользователей)
+### Enterprise (без ограничения по количеству пользователей)
 - **Custom pricing** — через отдел продаж Google или реселлеров
-- Без ограничений по количеству пользователей
-- Расширенное хранилище (as needed)
+- 5 TB/user по умолчанию (расширение через Google Sales для организаций от 5 пользователей)
 
 ### AI-возможности по тарифам
 
 | Функция | Starter | Standard | Plus | Enterprise |
 |---------|---------|----------|------|------------|
-| Gmail Help me write | ✓ | ✓ | ✓ | ✓ |
-| Smart replies | ✓ | ✓ | ✓ | ✓ |
+| Gmail Help me write | — | ✓ | ✓ | ✓ |
+| Smart replies | — | ✓ | ✓ | ✓ |
 | Docs/Sheets/Slides AI | — | ✓ | ✓ | ✓ |
 | Meet заметки | — | ✓ | ✓ | ✓ |
 | Meet перевод субтитров | — | ✓ | ✓ | ✓ |
 | Drive анализ PDF | — | ✓ | ✓ | ✓ |
 | Chat суммаризация | — | ✓ | ✓ | ✓ |
+| Image Gen (Nano Banana Pro) | ✓ ¹ | ✓ | ✓ | ✓ |
+| Vids (аватары, видео) | ✓ ¹ | ✓ | ✓ | ✓ |
+| NotebookLM Audio Overviews | — | ✓ | ✓ | ✓ |
 | Meet watermarking | — | — | ✓ | ✓ |
+
+> ¹ Доступно во всех тарифах, но с существенно меньшими лимитами (см. таблицу лимитов ниже).
 
 ## Add-on тарифы (расширенный AI)
 
@@ -139,7 +198,9 @@ Box, Dropbox, GitHub, HubSpot, Linear, Notion, Monday.com, Shopify
 | Image Gen (Nano Banana Pro) | 3/mo | 30/mo | 300/mo | 1,000/mo |
 | Workspace Studio | 100/mo | 400/mo | 2,000/mo | 10,000/mo |
 | Audio Overviews (PDFs) | — | 20/day | 40/day | 200/day |
-| Flow Credits | 50/mo | — | — | 25,000/mo |
+| Flow Credits | 50/mo | — ² | — ² | 25,000/mo |
+
+> ² Flow Credits для Standard/Plus/Enterprise без аддона не предусмотрены — функция доступна только в Starter (базовый лимит) и через аддон AI Expanded Access.
 
 ## Gemini Enterprise (Google Cloud) — Отдельный продукт
 
@@ -148,7 +209,7 @@ Box, Dropbox, GitHub, HubSpot, Linear, Notion, Monday.com, Shopify
 | Business | $21/user/mo | — | Малый бизнес, стартапы |
 | Standard | $30/user/mo | $35/user/mo | Knowledge workers |
 | Plus | $50/user/mo | $60/user/mo | Разработчики, power users |
-| Frontline | Ниже | — | Полевые работники (мин. 150 лиценций Standard/Plus) |
+| Frontline | Ниже | — | Полевые работники (доступно при наличии 150+ пользователей Standard/Plus в организации) |
 
 ### Storage по изданиям Gemini Enterprise
 
@@ -168,11 +229,27 @@ Box, Dropbox, GitHub, HubSpot, Linear, Notion, Monday.com, Shopify
 | Full connector ecosystem | ✓ | ✓ | ✓ | — |
 | Enterprise search | ✓ | ✓ | ✓ | ✓ |
 | Ground with Google Search | ✓ | ✓ | ✓ | — |
-| Gemini Code Assist | ✓ | ✓ | — | — |
-| NotebookLM Enterprise | ✓ | ✓ | — | — |
+| Gemini Code Assist | — | ✓ | ✓ | — |
+| NotebookLM Enterprise (чат) | ✓ | ✓ | ✓ | ✓ |
+| NotebookLM Enterprise (создание) | ✓ | — | ✓ | — |
 | Data Insights agent | ✓ | ✓ | — | — |
 | Deep Research | ✓ | ✓ | ✓ | ✓ |
 | Full-code custom agents | ✓ | ✓ | Limited | — |
+
+### Квоты и лимиты запросов
+
+| Ресурс | Лимит |
+|--------|-------|
+| **Code Assist Enterprise** | 2,000 RPD / 120 RPM на пользователя |
+| **Code Assist Standard** | 1,500 RPD / 120 RPM на пользователя |
+| **Deep Research (Workspace Enterprise)** | 10 отчётов за 30-дневный период ³ |
+| **Veo 3 Fast (Workspace Enterprise)** | 3 видео/день |
+| **Data stores/project** | 500 (увеличиваемые) |
+| **Engines/project** | 500 (увеличиваемые) |
+| **Docs AI** | до 500,000 символов |
+| **Sheets AI** | до 50,000 строк |
+
+> ³ 20 отчётов/день — лимит consumer AI Pro, не корпоративного тарифа. Один промпт в агентском режиме может приводить к нескольким запросам к модели.
 
 ## Расчёт стоимости для финтех-компании
 
@@ -196,25 +273,30 @@ Box, Dropbox, GitHub, HubSpot, Linear, Notion, Monday.com, Shopify
 
 ## Образование
 
-**Google AI Pro for Education**: $24/user/mo (monthly) или $20/user/mo (annual)
+**Google AI Pro for Education**: цена уточняется (ранее Gemini Education — $20/user/mo, Gemini Education Premium — $30/user/mo). Запущен в сентябре 2025, заменив предыдущие AI-аддоны для образования.
 
 ---
 
 # 3. Модели и AI-возможности
 
+## Архитектура моделей
+
+В основе Gemini Enterprise лежат мультимодальные модели семейства Gemini, использующие архитектуру **Mixture-of-Experts (MoE)**. Этот подход позволяет моделям быть более эффективными в обучении и обслуживании, обеспечивая производительность, превосходящую предыдущие поколения монолитных моделей. Для финтеха это означает высокую скорость отклика при решении критических задач — проверка транзакций в реальном времени, генерация кода для высоконагруженных систем.
+
 ## Доступные модели Gemini (март 2026)
 
 ### Gemini 3.1 Pro (Preview)
-- **Статус**: Preview в Model Garden и Vertex AI
+- **Статус**: Preview в Model Garden и Vertex AI (GA с 19 февраля 2026)
 - **Назначение**: Самая продвинутая reasoning-модель Gemini
 - **Контекстное окно**: 1M токенов
+- **Бенчмарки**: ARC-AGI-2: 77.1%
 - **Возможности**: Решение сложных задач из разных источников — текст, аудио, изображения, видео, PDF, целые кодовые репозитории
 - **Использование**: Enterprise через Vertex AI и Gemini Enterprise
 
 ### Gemini 3 Pro
-- **Статус**: Generally Available
+- **Статус**: Deprecated с 9 марта 2026 — идёт миграция на Gemini 3.1 Pro
 - **Назначение**: Глубокое рассуждение для сложных задач
-- **Доступ**: Gemini app, Gemini Enterprise
+- **Доступ**: Gemini app, Gemini Enterprise (рекомендуется переход на 3.1 Pro)
 
 ### Gemini 3 Flash
 - **Статус**: Public Preview
@@ -224,7 +306,7 @@ Box, Dropbox, GitHub, HubSpot, Linear, Notion, Monday.com, Shopify
 - **Доступ**: Vertex AI, Gemini Enterprise
 
 ### Gemini 3.1 Flash-Lite (Preview)
-- **Статус**: Preview
+- **Статус**: Preview (с 3 марта 2026)
 - **Назначение**: Самая cost-effective модель
 - **Доступ**: Gemini API, Google AI Studio, Vertex AI
 
@@ -235,6 +317,20 @@ Box, Dropbox, GitHub, HubSpot, Linear, Notion, Monday.com, Shopify
 ### Специализированные модели
 - **Nano Banana Pro** — продвинутая генерация изображений
 - **Veo 3.1** — генерация видео, AI-аватары в Vids и Gemini app
+
+## Сводная таблица моделей с финтех-маппингом
+
+| Характеристика | Gemini 3 Flash | Gemini 3.1 Pro | Gemini 3.1 Flash-Lite |
+|:---|:---|:---|:---|
+| **Архитектура** | MoE + reasoning | Агентские рассуждения | MoE (cost-effective) |
+| **Контекстное окно** | 1M токенов | 1M токенов | 1M токенов |
+| **Специализация** | Скорость + intelligence | Сложные мультимодальные задачи | Массовая обработка, low-cost |
+| **Бенчмарки** | GPQA Diamond 90.4%, HLE 33.7% | ARC-AGI-2: 77.1% | $0.25/1M input tokens |
+| **Применение в финтехе** | Чат-боты, первичный скоринг | Анализ кода, автономные агенты | Классификация, batch-обработка |
+
+## Значение расширенного контекстного окна
+
+Все актуальные модели (Gemini 3.1 Pro, 3 Flash, 3.1 Flash-Lite) поддерживают окно до **1 миллиона токенов**, что позволяет загружать полные репозитории кода или многолетние архивы документации для анализа без потери связности. В контексте финтеха это обеспечивает беспрецедентную точность при поиске «иглы в стоге сена» (needle-in-a-haystack) — будь то поиск конкретного условия в тысячах юридических контрактов или обнаружение уязвимостей в распределённой архитектуре микросервисов.
 
 ## AI-возможности в Workspace
 
@@ -282,6 +378,7 @@ Box, Dropbox, GitHub, HubSpot, Linear, Notion, Monday.com, Shopify
 2. **NotebookLM Enterprise** — глубокий анализ загруженных документов с цитатами
 3. **Gemini Code Assist Standard** — помощь в написании и дебаге кода
 4. **Data Insights Agent** — анализ данных
+5. **Idea Generation** — tournament-style brainstorming и генерация идей
 
 ### Agent Gallery
 - Готовые агенты от Google и партнёров
@@ -310,17 +407,66 @@ Gemini Enterprise дополняется Vertex AI для backend-разрабо
 ### 4.1 Разработка продукта (Engineering)
 
 #### Gemini Code Assist
+
+**Основные возможности:**
 - **Генерация кода**: автокомплит, генерация функций, рефакторинг
 - **Code review**: анализ кода, выявление уязвимостей
 - **Debugging**: автоматическая диагностика ошибок
 - **Документация**: генерация docstrings, README, API docs
 - **Оценка инструментов**: помощь в выборе и интеграции новых мониторинговых инструментов
 
+**Расширенные возможности Code Assist:**
+- **Agent Mode** — многоступенчатые задачи: рефакторинг целого модуля, обновление зависимостей во всём проекте
+- **Gemini CLI** — доступ к Code Assist из терминала разработчика
+- **Local codebase awareness** — генерация предложений с учётом специфических внутренних библиотек и стандартов кодирования компании
+- **Автоматическая генерация тестов** — создание модульных тестов для обеспечения высокого покрытия кода
+
+**IDE-интеграции:** VS Code, JetBrains, Android Studio
+
+#### Интеграция с GitHub и DevOps
+
+Gemini Code Assist на GitHub действует как интеллектуальный рецензент с классификацией серьёзности проблем:
+
+| Интеграционный сценарий | Описание | Результат |
+|:---|:---|:---|
+| **GitHub PR Review** | Автоматическое резюмирование и проверка кода с уровнями серьёзности (Critical, High, Medium, Low) | Ускорение ревью |
+| **Jira Issue Creation** | Создание тикетов из чата Gemini Enterprise | Снижение административной нагрузки |
+| **Confluence Wiki Sync** | Генерация документации из кода и логов | Актуальность тех. документации |
+| **Firebase App Quality** | Анализ крашей и предложение фиксов | Повышение стабильности мобильных приложений |
+
+**Style Guides («золотые пути»):** Платформенные администраторы могут определять централизованные Style Guides на уровне организации. Это гарантирует, что AI предлагает решения, соответствующие внутренним стандартам качества и безопасности — критически важно для финтеха.
+
+#### Автоматическая генерация тест-кейсов в формате Gherkin
+
+QA-инженер может использовать Gemini для генерации BDD-сценариев на основе технического задания из Confluence:
+
+1. **Подготовка ТЗ** в Confluence с бизнес-правилами и критериями приёмки
+2. **Промпт для Gemini**: «Проанализируй ТЗ и создай набор тест-кейсов в формате Gherkin. Включи позитивные сценарии, негативные сценарии и пограничные случаи»
+3. **Permissions-aware коннектор** обеспечивает доступ к документу с учётом прав QA-инженера
+4. **Результат**: Gherkin-сценарии (Given-When-Then) для импорта в TestRail или Jira (X-Ray/Zephyr)
+
+#### Автоматическая генерация OpenAPI документации
+
+1. Разработчик документирует REST-контроллеры (Spring Boot) с Javadoc-комментариями
+2. Gemini Code Assist генерирует OpenAPI 3.0 спецификацию в YAML по промпту
+3. CI/CD-пайплайн валидирует спецификацию (`swagger-cli`), генерирует клиентские SDK (`openapi-generator-cli`)
+4. Артефакт публикуется на внутреннем портале для разработчиков
+
+#### Автоматизация комплаенс-проверки кода (SonarQube + Gemini)
+
+Интеграция Gemini с SonarQube и Confluence для автоматической генерации отчётов о соответствии кода:
+
+1. **Коннектор для Confluence** индексирует страницы с внутренними стандартами безопасности
+2. **Кастомный коннектор для SonarQube** извлекает результаты SAST-сканирования
+3. **Промпт**: «Создай отчёт о соответствии кода для проекта, сопоставь уязвимости из SonarQube с внутренними стандартами из Confluence, классифицируй по степени риска»
+4. **Результат**: структурированный отчёт в Google Docs — сводка, детализация, привязка к стандартам, рекомендации по исправлению
+
 #### Кастомные AI-агенты для разработки
 - Автоматизация CI/CD pipeline мониторинга
 - Агенты для анализа логов и incident response
 - Интеграция с Jira/Linear для автоматического трекинга задач
 - Агенты для автоматического тестирования и QA
+- **Compliance Evidence** — автоматический сбор доказательств прохождения всех проверок для аудитов
 
 #### Workspace для DevOps
 - **Google Chat** — интеграция с alerting (PagerDuty, OpsGenie через коннекторы)
@@ -335,6 +481,19 @@ Gemini Enterprise дополняется Vertex AI для backend-разрабо
 - **BigQuery интеграция** — Gemini Enterprise подключается к BigQuery для анализа данных в natural language
 - **Data Insights Agent** — автоматический анализ данных для бизнес-пользователей
 
+#### Финансовая аналитика и расчёт KPI в Sheets
+
+Gemini в Google Sheets позволяет аналитикам переходить от ручного ввода формул к запросам на естественном языке. Для расчёта коэффициентов ликвидности или рентабельности достаточно попросить AI проанализировать загруженный балансовый отчёт. Модель способна не только выдать результат, но и объяснить причины изменения показателей.
+
+**Примеры промптов для продуктового аналитика:**
+
+1. **Воронка конверсии**: «Проанализируй данные. Построй воронку конверсии: просмотр → корзина → покупка. Определи топ-5 товаров с низкой конверсией»
+2. **Гипотезы для A/B-тестов**: «Предложи 3 гипотезы для A/B-теста по увеличению среднего чека. Для каждой: гипотеза, основная метрика, потенциальные риски»
+3. **Поиск аномалий**: «Найди 5 самых значимых аномалий в транзакциях за последний месяц по сумме. Для каждой укажи user_id и дату»
+4. **Сегментация**: «Сегментируй пользователей на 3 группы по покупательскому поведению. Создай сводную таблицу с средним чеком по сегментам и регионам»
+
+**Ограничения:** Sheets AI эффективен для десятков тысяч строк. Для миллионов записей — предварительная агрегация в BigQuery, затем импорт результатов в Sheets для визуализации.
+
 #### Risk Management & Fraud Detection
 - Идентификация аномалий и необычных паттернов в реальном времени
 - AI-powered fraud detection — 40% сокращение ложноположительных срабатываний (кейс Macquarie Bank)
@@ -347,12 +506,27 @@ Gemini Enterprise дополняется Vertex AI для backend-разрабо
 - **NotebookLM** — анализ рыночных отчётов, regulatory filings
 - Суммаризация earnings reports и регуляторных изменений
 
+#### NotebookLM для комплаенса и Due Diligence
+
+NotebookLM становится центральным хабом для работы с большими массивами знаний:
+- **Синтез знаний**: загрузка директив (GDPR, EBA) → мгновенные ответы о соответствии новых функций
+- **Анализ Earnings Calls**: загрузка транскриптов звонков инвесторов конкурентов для выделения ключевых трендов и угроз
+- **Источник правды**: ссылки на конкретные страницы и абзацы загруженных документов — исключает галлюцинации и обеспечивает проверяемость
+
 #### Работа с требованиями
 - **Docs AI** — быстрое составление PRD, user stories
 - **Sheets AI** — приоритизация бэклога, анализ метрик
 - **Slides AI** — подготовка презентаций для стейкхолдеров
 
-### 4.4 Клиентский сервис
+### 4.4 Автоматизированная обработка финансовых документов
+
+Финтех-продукты часто требуют обработки огромного количества входящих документов (счета, выписки, ID-карты). С помощью Gemini и Google Cloud можно построить автоматизированный конвейер:
+
+1. **OCR нового поколения** — Gemini понимает контекст и семантическую структуру документа, безошибочно извлекая данные даже из неструктурированных файлов
+2. **Интеллектуальная категоризация** — автоматическое сопоставление извлечённых данных с бухгалтерскими кодами или категориями расходов
+3. **Анализ аномалий** — сравнение данных из новых документов с историческими паттернами, мгновенная пометка подозрительных транзакций
+
+### 4.5 Клиентский сервис
 
 #### Customer Support Automation
 - AI-чатботы на базе Gemini Enterprise для 24/7 поддержки
@@ -364,7 +538,7 @@ Gemini Enterprise дополняется Vertex AI для backend-разрабо
 - Автоматическая регистрация клиентов через AppSheet
 - Compliance approvals automation
 
-### 4.5 Маркетинг и коммуникации
+### 4.6 Маркетинг и коммуникации
 
 #### Контент-маркетинг
 - **Docs Help me write** — быстрое создание маркетинговых материалов
@@ -377,7 +551,7 @@ Gemini Enterprise дополняется Vertex AI для backend-разрабо
 - Real-time перевод на встречах (100+ языков)
 - Глобальное масштабирование коммуникаций
 
-### 4.6 Compliance и Legal
+### 4.7 Compliance и Legal
 
 #### Регуляторный мониторинг
 - **Deep Research** — отслеживание изменений в регуляторике
@@ -389,7 +563,7 @@ Gemini Enterprise дополняется Vertex AI для backend-разрабо
 - AI-powered Data Loss Prevention
 - Client-side encryption для конфиденциальных документов
 
-### 4.7 HR и внутренние процессы
+### 4.8 HR и внутренние процессы
 
 - **Gmail AI** — ускорение внутренних коммуникаций на 20% (кейс FinQuery)
 - **Chat AI** — суммаризация обсуждений в командах
@@ -416,7 +590,7 @@ Gemini Enterprise дополняется Vertex AI для backend-разрабо
 ├─────────────────────────────────────────────┤
 │          Интеграции                          │
 │  Jira │ Salesforce │ ServiceNow │ Slack     │
-│  GitHub │ Confluence │ SAP                   │
+│  GitHub │ Confluence │ SAP │ SonarQube      │
 └─────────────────────────────────────────────┘
 ```
 
@@ -427,26 +601,40 @@ Gemini Enterprise дополняется Vertex AI для backend-разрабо
 ## Google Workspace — Сертификации
 
 ### Международные стандарты
-- **ISO 27001** — управление информационной безопасностью
-- **SOC 2 и SOC 3** — контроли безопасности и конфиденциальности
+- **ISO/IEC 27001** — управление информационной безопасностью
+- **ISO/IEC 27017** — облачная безопасность
+- **ISO/IEC 27018** — защита персональных данных в облаке
+- **ISO/IEC 27701** — менеджмент конфиденциальной информации
+- **ISO/IEC 42001** — системы менеджмента искусственного интеллекта (первая в мире сертификация AIMS)
+- **SOC 1, 2 и 3** — контроли безопасности, финансовой отчётности и конфиденциальности
 - **FedRAMP High** — федеральный стандарт безопасности (США)
+- **HIPAA** — для обработки данных, связанных со здоровьем
+- **PCI DSS 4.0.1** — сертифицирован для **Google Cloud Platform** (НЕ для Google Workspace). Для работы с данными банковских карт необходимо использовать GCP
 
 ### Финансовые регуляторы
-- **FINRA** — Financial Industry Regulatory Authority (США)
-- **SEC Rule 17a-4** — хранение электронных записей (США)
-- **CFTC** — Commodity Futures Trading Commission (США)
-- **DORA** — Digital Operational Resilience Act (ЕС)
-- **OSFI** — Office of the Superintendent of Financial Institutions (Канада)
-- Регуляторные требования Австралии, Индии, Сингапура, UK
+
+| Регулятор / Стандарт | Область применения | Статус поддержки |
+|:---|:---|:---|
+| **DORA (EU)** | Операционная устойчивость | Поддержка через contract mappings и Business Continuity (SLA 99.9%) |
+| **EBA Guidelines** | Аутсорсинг в банках ЕС | Соответствие правам на аудит |
+| **FINRA / SEC 17a-4** | Хранение записей в США | Поддержка через Cohasset Attestation |
+| **CFTC** | Commodity Futures Trading Commission (США) | Поддерживается |
+| **OSFI** | Канадский финансовый регулятор | Поддерживается |
+
+**DORA**: Google представил специализированные планы Business Continuity — отдельный standby-продукт, позволяющий сохранять доступ к критическим инструментам Workspace при масштабных сбоях инфраструктуры (прямой ответ на требования DORA к устойчивости ИКТ-систем).
 
 ### Доступность
-- **99.99% uptime** через Business Continuity environment
+- **99.9% uptime** — гарантированный SLA ([Google Workspace SLA](https://workspace.google.com/terms/sla/))
+- **Business Continuity** — отдельный продукт-standby для организаций, использующих не-Google инструменты как основные
 
 ## Gemini Enterprise — Безопасность
 
 ### Управление доступом
-- **SSO интеграция** — единый вход через корпоративные IdP
+- **SSO интеграция** — единый вход через корпоративные IdP (SAML 2.0, OIDC)
+- Поддержка провайдеров: Okta, Azure AD (Microsoft Entra ID), Ping Identity
 - **Permission-aware search** — результаты поиска соответствуют правам пользователя
+- **RBAC** — ролевая модель (суперадминистраторы, администраторы, пользователи)
+- **Гранулярное управление**: включение/отключение Gemini на уровне организационных подразделений (OU) и групп конфигурации (настройки групп имеют приоритет над OU)
 - Все данные доступны только при наличии соответствующих прав
 
 ### Шифрование
@@ -454,28 +642,61 @@ Gemini Enterprise дополняется Vertex AI для backend-разрабо
 - **Customer-Managed Encryption Keys (CMEK)** — клиент управляет ключами шифрования
 - Шифрование данных at rest и in transit
 
+### Резидентность данных
+- Администраторы могут указать регион хранения: мультирегион **US**, **EU** или глобальное расположение
+- Настройки применяются на уровне организации или отдельных OU
+- Для использования CMEK необходимо выбрать мультирегион `us` или `eu`
+- Gemini Enterprise Plus поддерживает **Sovereignty Controls** для суверенных границ данных
+
 ### Защита данных
 - **VPC Service Controls** — предотвращение утечки данных
 - **Model Armor** — защита от adversarial атак на модели
 - **AI-powered Data Loss Prevention (DLP)** — автоматическая классификация и защита конфиденциальных файлов
+- **Information Rights Management (IRM)** — если документ имеет метку «совершенно секретно» и IRM запрещает скачивание, Gemini соблюдает эти ограничения
 - **Private UI access** — доступ через приватный интерфейс
 
 ### Аудит и мониторинг
 - **Audit logging** — полное логирование действий
 - **Admin dashboard** — централизованное управление агентами и безопасностью
 - Мониторинг использования AI на уровне организации
+- Экспорт данных об активности Gemini для аудита
 
 ### Данные и обучение моделей
-- **Enterprise данные НЕ используются для обучения моделей** (кроме Starter edition)
+- **Enterprise данные НЕ используются для обучения моделей** (Business, Standard, Plus, Enterprise)
+- **Информация не подвергается человеческому просмотру** специалистами Google — устраняет риски утечки конфиденциальной финансовой информации
+- **Starter edition**: данные могут использоваться для улучшения сервиса и обучения моделей; человеческие рецензенты могут читать контент. Доступен opt-out. Google рекомендует не отправлять конфиденциальные данные в Starter
 - Данные остаются в контроле организации
 
 ### Assured Controls (аддон)
 - **Data sovereignty** — управление местоположением данных
 - Контроль над геолокацией обработки данных
 
+## Google Vault — Управление информацией и eDiscovery
+
+Google Vault — ключевой инструмент для финтех-компаний, обеспечивающий хранение, поиск и экспорт всех электронных коммуникаций, включая сгенерированный AI контент.
+
+### Интеграция с Gemini
+
+- **Meet расшифровки и сводки**: документы с итогами встречи сохраняются в Google Drive → подпадают под политики Vault
+- **Chat сводки**: сгенерированные Gemini сводки сохраняются в пространствах Chat → управляются Vault
+- **Промпты и ответы в Gemini app**: Vault поддерживает поиск и экспорт разговоров из приложения Gemini (веб и мобильное)
+
+### Настройка для FINRA / SEC Rule 17a-4
+
+SEC 17a-4 требует хранения записей в неизменяемом формате **WORM** (Write Once, Read Many):
+
+1. **Правила хранения (Retention Rules)**: администратор создаёт правила для Google Drive и Chat (например, 7 лет или бессрочно). Правила можно применять ко всей организации или отдельным OU
+2. **Vault Lock**: блокировка правила хранения — заблокированное правило невозможно изменить или удалить даже суперадминистраторам. Гарантирует неизменность данных (требование WORM)
+3. **Legal Holds (запрет на удаление)**: при судебном разбирательстве или запросе регулятора — блокировка данных конкретных пользователей. Имеет приоритет над любыми правилами хранения
+4. **eDiscovery**: создание «дела» (Matter), поиск по ключевым словам/пользователям/датам, экспорт в стандартных форматах (MBOX, CSV, XML) с метаданными
+5. **FINRA-экспорт**: с подпиской Enterprise Plus + Assured Controls → экспорт в GCS-бакет клиента → архивация через **AODocs** в неизменяемые GCS-бакеты
+
+### Cohasset Attestation
+Google Workspace получил **Cohasset Attestation** — независимую оценку соответствия требованиям FINRA/SEC к хранению записей. Это упрощает процесс доказательства соответствия для регуляторов.
+
 ## Ключевые метрики безопасности
 
-- 33% пользователей Workspace сообщают о снижении инцидентов безопасности (vs 22% у Microsoft 365)
+- 33% пользователей Workspace сообщают о снижении инцидентов безопасности (vs 22% у Microsoft 365) — по данным [Google-commissioned survey, октябрь 2025](https://services.google.com/fh/files/misc/google_workspace_v_microsoft_365_final_report_101525.pdf)
 - Автоматическая классификация и маркировка конфиденциальных файлов
 - Privacy-preserving AI модели для отраслевых нужд
 
@@ -489,10 +710,11 @@ Gemini Enterprise дополняется Vertex AI для backend-разрабо
 5. **Assured Controls** — если требуется data sovereignty (GDPR, локальные регуляции)
 6. **DLP policies** — автоматическое предотвращение утечки персональных и финансовых данных
 7. **Audit logging** — для регуляторных проверок и внутреннего аудита
+8. **Google Vault** — с настроенными правилами хранения и Vault Lock для WORM-совместимости
 
 ### Ограничения для финтеха:
+- PCI DSS сертифицирован для GCP, НЕ для Google Workspace — для обработки платёжных данных необходима инфраструктура GCP
 - Не все модели прошли отраслевую сертификацию
-- Для обработки платёжных данных (PCI DSS) могут потребоваться дополнительные меры
 - Рекомендуется phased rollout с пилотной группой
 
 ---
@@ -526,7 +748,7 @@ Gemini Enterprise дополняется Vertex AI для backend-разрабо
   - Быстрый доступ к информации
   - Повышение эффективности коллаборации
 
-### Macquarie Bank (глобальный инвестбанк)
+### Macquarie Bank (австралийская диверсифицированная фингруппа, retail banking)
 - **Продукт**: Gemini Enterprise
 - **Результаты**:
   - 38% больше пользователей перенаправлено на self-service решения
@@ -545,9 +767,15 @@ Gemini Enterprise дополняется Vertex AI для backend-разрабо
   - Ускорение кредитного анализа
   - Повышение продуктивности юридического и маркетингового отделов
 
+### Banco BV (бразильский банк)
+- **Продукт**: Gemini Enterprise
+- **Использование**:
+  - Автоматизация аналитики для менеджеров по работе с клиентами
+  - Менеджеры ранее тратили часы на самостоятельный анализ данных — теперь Gemini выполняет эту работу, высвобождая время для привлечения новых клиентов
+
 ### Nu Bank (цифровой банк, Бразилия)
-- **Продукт**: Google Workspace
-- **Статус**: Noted as adopter (детали не раскрыты)
+- **Продукт**: Google Workspace (базовые инструменты)
+- **Статус**: Использует Workspace для продуктивности, но AI-стратегия построена на партнёрстве с OpenAI, а не Google Gemini
 
 ### Robinhood (финтех-брокер)
 - **Продукт**: Google Workspace
@@ -560,6 +788,15 @@ Gemini Enterprise дополняется Vertex AI для backend-разрабо
 ### Pennymac (ипотечная компания)
 - **Продукт**: Google Workspace
 - **Статус**: Noted as adopter (детали не раскрыты)
+
+### Paysera (литовский финтех, платёжные решения)
+- **Продукт**: Gemini Enterprise + внутренний фреймворк App-MCP
+- **Использование**:
+  - Кастомный MCP-сервер для автоматической генерации тест-кейсов (стоимость одного файла: 6-7 центов)
+  - AI Code Review в CI/CD-пайплайне (GitLab)
+  - Автоматический сбор Compliance Evidence для аудитов
+  - Интеграция Jira + Confluence + GitLab через permissions-aware коннекторы
+- **Принцип**: «AI делает — человек решает»
 
 ## Другие индустрии (релевантные паттерны)
 
@@ -592,15 +829,55 @@ Gemini Enterprise дополняется Vertex AI для backend-разрабо
 
 ---
 
-# 7. Источники
+# 7. Стратегическое внедрение: от пилота к эксплуатации
+
+Переход на Gemini Enterprise требует структурированного подхода. Опыт ATB Financial, Equifax и других компаний показывает, что успех зависит от правильной настройки управления изменениями (Change Management).
+
+## 4-фазный план внедрения
+
+### Фаза 1: Инфраструктура
+- Настройка **VPC Service Controls** и **CMEK** в Google Cloud Console для безопасного периметра
+- Назначение IAM-ролей (например, `Discovery Engine Editor`) ответственным сотрудникам
+- Конфигурация **DLP policies** и **Vault** с правилами хранения
+- Настройка SSO (SAML 2.0 / OIDC) и Identity Mapping
+
+### Фаза 2: Интеграция
+- Подключение ключевых источников данных (Jira, GitHub, Drive, Confluence)
+- Настройка permissions-aware коннекторов с OAuth 2.0
+- Конфигурация квот и лимитов для предотвращения неконтролируемого роста затрат
+- Настройка Style Guides (golden paths) для Code Assist
+
+### Фаза 3: Пилотирование
+- Запуск фокус-групп:
+  - **Разработчики** — Code Assist (Agent Mode, автогенерация тестов, PR review)
+  - **Финансовые аналитики** — NotebookLM, AI в Sheets, Data Insights Agent
+  - **Compliance-офицеры** — Google Vault, Deep Research для мониторинга регуляторики
+- Сбор метрик: Lead Time for Changes, Code Coverage, Time-to-Market, False Positive Rate
+- Оценка и корректировка Style Guides на основе обратной связи
+
+### Фаза 4: Масштабирование
+- Развёртывание кастомных агентов для специфических процессов:
+  - Автоматизация KYC/AML онбординга
+  - Комплаенс-контроль в CI/CD (SonarQube + Gemini)
+  - Financial document processing pipeline
+- Консолидация AI-подписок в единую платформу — снижение «технического долга AI»
+- Публикация внутренних агентов в Agent Gallery для организации
+
+## Снижение технического долга AI
+
+Внедрение Gemini Enterprise позволяет консолидировать разрозненные подписки на инструменты генеративного AI в единую, защищённую и управляемую платформу. Это не только оптимизирует бюджет, но и создаёт единый стандарт безопасности и качества данных во всей организации.
+
+---
+
+# 8. Источники
 
 ## Официальные страницы Google
 
 ### Pricing & Plans
 - [Google Workspace Pricing](https://workspace.google.com/pricing) — официальная страница тарифов
 - [Compare Google AI expansion add-ons](https://knowledge.workspace.google.com/admin/getting-started/editions/compare-google-ai-expansion-add-ons) — сравнение AI-аддонов
-- [How Google Workspace with Gemini billing works](https://support.google.com/a/answer/13969047?hl=en) — биллинг Workspace+Gemini
-- [AI Ultra Access](https://support.google.com/a/answer/16345165?hl=en) — описание ультра-тарифа
+- [How Google Workspace with Gemini billing works](https://knowledge.workspace.google.com/admin/gemini/how-google-workspace-with-gemini-billing-works) — биллинг Workspace+Gemini
+- [AI Ultra Access](https://knowledge.workspace.google.com/admin/gemini/ai-ultra-access) — описание ультра-тарифа
 
 ### Gemini Enterprise (Google Cloud)
 - [Gemini Enterprise — Main Page](https://cloud.google.com/gemini-enterprise) — главная страница продукта
@@ -610,25 +887,60 @@ Gemini Enterprise дополняется Vertex AI для backend-разрабо
 - [NotebookLM Enterprise vs Gemini Enterprise](https://docs.cloud.google.com/gemini/enterprise/docs/choose-product) — выбор продукта
 - [Introducing Gemini Enterprise (Blog)](https://cloud.google.com/blog/products/ai-machine-learning/introducing-gemini-enterprise) — анонс продукта
 - [Quotas and system limits](https://docs.cloud.google.com/gemini/enterprise/docs/quotas) — квоты и лимиты
+- [Choose your edition](https://support.google.com/g/answer/16547364?hl=en) — выбор издания
+- [Compliance certifications and security controls](https://docs.cloud.google.com/gemini/enterprise/docs/compliance-security-controls) — сертификации
+- [Example use cases](https://docs.cloud.google.com/gemini/enterprise/docs/example-use-cases) — примеры использования
+- [Introduction to connectors and data stores](https://docs.cloud.google.com/gemini/enterprise/docs/connectors/introduction-to-connectors-and-data-stores) — коннекторы
 
 ### Gemini AI Features in Workspace
 - [Gemini AI features in Workspace subscriptions](https://knowledge.workspace.google.com/admin/gemini/gemini-ai-features-now-included-in-google-workspace-subscriptions) — полный список AI-фич
 - [AI Tools for Business](https://workspace.google.com/solutions/ai/) — AI-инструменты для бизнеса
 - [Workspace Updates: Higher AI access (Feb 2026)](https://workspaceupdates.googleblog.com/2026/02/google-workspace-ai-expanded-access.html) — обновления февраля 2026
 - [Gemini Workspace updates (March 2026)](https://blog.google/products-and-platforms/products/workspace/gemini-workspace-updates-march-2026/) — обновления марта 2026
+- [Gemini for Google Workspace FAQ](https://knowledge.workspace.google.com/admin/gemini/gemini-for-google-workspace-faq) — FAQ
 
 ### Модели Gemini
 - [Gemini 3.1 Pro](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/) — анонс модели
+- [Gemini 3.1 Pro on CLI, Enterprise, Vertex AI](https://cloud.google.com/blog/products/ai-machine-learning/gemini-3-1-pro-on-gemini-cli-gemini-enterprise-and-vertex-ai) — техническое описание
 - [Gemini 3 Flash](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-flash) — документация
 - [Gemini 3 Pro](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-pro) — документация
 - [Gemini 3.1 Flash-Lite](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-flash-lite/) — cost-effective модель
 - [Vertex AI Pricing](https://cloud.google.com/vertex-ai/generative-ai/pricing) — цены на API
 - [Gemini API Rate Limits](https://ai.google.dev/gemini-api/docs/rate-limits) — лимиты API
 
+### Code Assist & SDLC
+- [Gemini Code Assist overview](https://developers.google.com/gemini-code-assist/docs/overview) — обзор
+- [Code Assist for teams and businesses](https://codeassist.google/products/business) — для бизнеса
+- [Code Assist Standard and Enterprise overview](https://docs.cloud.google.com/gemini/docs/codeassist/overview) — Standard и Enterprise
+- [Code Assist quotas and limits](https://developers.google.com/gemini-code-assist/resources/quotas) — квоты
+- [Review GitHub code using Code Assist](https://developers.google.com/gemini-code-assist/docs/review-github-code) — GitHub PR review
+- [Code Assist in GitHub for Enterprises](https://cloud.google.com/blog/products/ai-machine-learning/gemini-code-assist-in-github-for-enterprises/) — Style Guides, golden paths
+- [Gemini for end-to-end SDLC](https://www.skills.google/paths/236/course_templates/885) — курс
+
+### Connectors & Data Integration
+- [Connect your Google apps and third-party data](https://support.google.com/g/answer/16550932?hl=en) — подключение данных
+- [Connect a third-party data source](https://docs.cloud.google.com/gemini/enterprise/docs/connectors/connect-third-party-data-source) — сторонние источники
+- [Set up a Jira Cloud data store](https://docs.cloud.google.com/gemini/enterprise/docs/connectors/jira-cloud/set-up-data-store) — Jira
+- [Set up a Confluence Cloud data store](https://docs.cloud.google.com/gemini/enterprise/docs/connectors/confluence-cloud/set-up-data-store) — Confluence
+
+### Agents & ADK
+- [Integrate Gemini Enterprise Agents with Workspace (Codelab)](https://codelabs.developers.google.com/ge-gws-agents) — tutorial по агентам
+- [Gemini API for Developers](https://ai.google.dev/gemini-api/docs) — API
+
 ### Финансовые сервисы
 - [Google Workspace for Finance](https://workspace.google.com/industries/finance/) — отраслевая страница
 - [Financial Services on Google Cloud](https://cloud.google.com/solutions/financial-services) — Google Cloud для финансов
-- [Integrate Gemini Enterprise Agents with Workspace (Codelab)](https://codelabs.developers.google.com/ge-gws-agents) — tutorial по агентам
+- [Transform Financial Services with AI (UK)](https://workspace.google.com/intl/en_uk/industries/finance/) — EBA Guidelines
+- [AI for Finance — Gemini](https://workspace.google.com/solutions/ai/finance/) — AI для финансов
+- [Analyze financial statements (use case)](https://docs.cloud.google.com/gemini/enterprise/docs/use-case-analyze-financial-statements) — анализ фин. отчётности
+- [Expanding commitments for Financial Services](https://workspace.google.com/blog/product-announcements/expanding-commitments-to-help-global-financial-services-customers) — DORA, BC
+
+### Безопасность и комплаенс
+- [Cloud Security](https://workspace.google.com/security/) — безопасность
+- [Generative AI Privacy Hub](https://knowledge.workspace.google.com/admin/gemini/generative-ai-in-google-workspace-privacy-hub) — приватность AI
+- [Gemini Security Privacy Compliance Whitepaper](https://workspace.google.com/learning/content/gemini-privacy-security-compliance-whitepaper) — whitepaper
+- [EBA Outsourcing Guidelines Mapping](https://services.google.com/fh/files/misc/eba_outsourcing_guidelines_googleworkspace_compliance_mapping.pdf) — EBA mapping
+- [Google Workspace SLA](https://workspace.google.com/terms/sla/) — SLA
 
 ## Кейсы и аналитика
 
@@ -649,6 +961,12 @@ Gemini Enterprise дополняется Vertex AI для backend-разрабо
 - [Gemini Enterprise guide (Revolgy)](https://www.revolgy.com/insights/blog/guide-to-gemini-enterprise-features-pricing-and-implementation) — полный гайд
 - [Gemini Enterprise vs Workspace (Premier Cloud)](https://premiercloud.com/blog/gemini-enterprise-how-is-it-different-from-gemini-in-workspace-and-notebooklm/) — сравнение
 - [Gemini for Financial Services (Promevo)](https://promevo.com/blog/gemini-for-financial-services) — для финансов
-- [Top 6 Gemini Use Cases (Cloudfresh)](https://cloudfresh.com/en/blog/gemini-google-workspace/) — топ кейсы
+- ~~[Top 6 Gemini Use Cases (Cloudfresh)](https://cloudfresh.com/en/blog/gemini-google-workspace/)~~ — ссылка недоступна (403 Cloudflare)
 - [Google Workspace price increase (9to5Google)](https://9to5google.com/2025/01/15/google-workspace-gemini-price-increase/) — повышение цен
-- [Workspace drops Gemini add-on (Constellation Research)](https://www.constellationr.com/blog-news/insights/google-workspace-drops-gemini-add-charge-raises-business-enterprise-plan-prices) — отмена аддона
+- [Workspace drops Gemini add-on (Constellation Research)](https://www.constellationr.com/insights/news/google-workspace-drops-gemini-add-charge-raises-business-enterprise-plan-prices) — отмена аддона
+- [Google AI Guide: Enterprise vs Vertex vs Workspace (ByteeIT)](https://byteeit.com/blog/google-ai-comparison-gemini-enterprise-vertex-ai-workspace) — сравнение
+- [Gemini Enterprise (Devoteam)](https://www.devoteam.com/google-cloud-gemini-enterprise/) — обзор
+- [10 Differences: Workspace with Gemini vs Enterprise (Devoteam)](https://www.devoteam.com/expert-view/google-workspace-with-gemini-vs-gemini-enterprise-10-differences-you-should-know/) — различия
+- [Gemini for Financial Services (Evonence)](https://www.evonence.com/blog/gemini-for-enterprise-in-financial-services-the-new-era-of-intelligent-finance) — для финансов
+- [TEI of Google Workspace with Gemini (Forrester)](https://tei.forrester.com/go/Google/WorkspaceWithGemini/index.html) — Forrester report
+- [Google Workspace vs Microsoft 365 Survey](https://services.google.com/fh/files/misc/google_workspace_v_microsoft_365_final_report_101525.pdf) — исследование безопасности
