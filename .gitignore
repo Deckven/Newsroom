@@ -2,7 +2,7 @@
 __pycache__/
 *.pyc
 *.pyo
-.claude/
+.claude/*
 !.claude/commands/
 config.yaml
 *.egg-info/
