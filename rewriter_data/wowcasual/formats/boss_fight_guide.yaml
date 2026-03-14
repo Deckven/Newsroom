@@ -1,0 +1,269 @@
+# Формат: Гайд по боссфайтам
+# Тактика рейдовых боссов и энкаунтеров
+id: boss_fight_guide
+name: Гайд по боссфайтам
+description: >
+  Практическое руководство по прохождению рейдовых боссов.
+  Справочный стиль с элементами лора — описание способностей,
+  тактика по сложностям (нормал/героик/мифик), таблица лута.
+  Серийный формат — по одному боссу на статью, объединённые
+  в серию по рейду. Также бывают обзоры рейда целиком.
+
+subtypes:
+  boss_tactics:
+    description: >
+      Тактика на конкретного босса. Один босс — одна статья.
+      Стандартная структура: лор → способности → тактика по
+      сложностям → видео → лут. Часть серии по рейду.
+    structure:
+      intro: >
+        Краткая история персонажа-босса (лор). Контекст энкаунтера.
+      body:
+        - Обзор боя (общая механика, фазы)
+        - Описание способностей босса (с названиями, уроном)
+        - Тактика для нормального режима
+        - Отличия героического режима
+        - Отличия эпохального/мифик режима
+        - Задачи по ролям (танки, дамагеры, хилы)
+        - Видео боя
+        - Таблица лута
+      outro: >
+        Ссылки на тактики других боссов рейда.
+  raid_overview:
+    description: >
+      Первые впечатления от рейда целиком — дизайн, сложность,
+      общая оценка. Короткий формат (500-700 слов). Смесь
+      дневника и аналитики, не тактика.
+    structure:
+      intro: >
+        Контекст — какой патч, какой рейд, с каким составом зашли.
+      body:
+        - Визуальный дизайн и атмосфера
+        - Общие впечатления от боссов
+        - Оценка сложности
+        - Статистика прогресса (WoW Progress и т.д.)
+      outro: >
+        Общий вердикт. Ссылки на тактики.
+
+constraints:
+  word_count:
+    min: 600
+    max: 3300
+    target: 1500
+    note: >
+      boss_tactics обычно 1200–2100, финальные боссы до 3300.
+      raid_overview ~600. Финальные боссы (Архимонд, Аргус)
+      значительно длиннее из-за многофазности.
+  paragraphs:
+    max_length: 3-5 предложений
+  subheadings: required
+
+structure:
+  intro: >
+    Краткая история персонажа-босса (лор). Контекст энкаунтера
+    в рейде — где находится, что ему предшествует.
+  body:
+    - Обзор боя (общая механика)
+    - Описание способностей босса (с названиями)
+    - Тактика для нормального режима
+    - Тактика для героического режима (отличия)
+    - Тактика для эпохального режима (отличия)
+    - Задачи по ролям (танки, дамагеры, хилы)
+    - Видео боя
+    - Таблица лута
+  outro: >
+    Ссылки на тактики других боссов рейда.
+
+tone:
+  primary: справочно-практический
+  allowed:
+    - элементы лора в описании босса
+    - краткие тактические советы
+    - чёткие инструкции
+    - игровая терминология (вайп, энкаунтер, адды, фаза)
+  avoid:
+    - занудный разбор без структуры
+    - избыточные личные впечатления (это гайд, не дневник)
+
+formatting:
+  bold: имена боссов, названия рейдов, названия фаз
+  italic: названия способностей
+  lists: для перечисления способностей и тактических шагов
+  tables: для лута
+  spoilers: раскрывающиеся блоки для списков способностей
+
+examples:
+  # === BOSS_TACTICS: Анторус, Пылающий Трон (10 примеров) ===
+  - title: "Анторус, Пылающий Трон — Разрушитель миров Кин'гарота"
+    url: "https://www.wowcasual.info/rejdy-legion-antorus-pylayushhij-tron-razrushi/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды Legion — Анторус"
+    boss: "Разрушитель миров Кин'гарота"
+    boss_number: 1
+    word_count: 1200
+
+  - title: "Анторус, Пылающий Трон — Военный совет Анторуса"
+    url: "https://www.wowcasual.info/rejdy-legion-antorus-pylayushhij-tron-voennyj/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды Legion — Анторус"
+    boss: "Военный совет Анторуса"
+    boss_number: 3
+    word_count: 1368
+
+  - title: "Анторус, Пылающий Трон — Хранительница порталов Азабель"
+    url: "https://www.wowcasual.info/rejdy-legion-antorus-pylayushhij-tron-hranite/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды Legion — Анторус"
+    boss: "Хранительница порталов Азабель"
+    boss_number: 4
+    word_count: 1754
+
+  - title: "Анторус, Пылающий Трон — Эонар, Хранительница жизни"
+    url: "https://www.wowcasual.info/rejdy-legion-antorus-pylayushhij-tron-eonar-h/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды Legion — Анторус"
+    boss: "Эонар"
+    boss_number: 5
+    word_count: 1179
+
+  - title: "Анторус, Пылающий Трон — Ловец душ Имонар"
+    url: "https://www.wowcasual.info/rejdy-legion-antorus-pylayushhij-tron-lovecz-d/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды Legion — Анторус"
+    boss: "Ловец душ Имонар"
+    boss_number: 6
+    word_count: 2171
+
+  - title: "Анторус, Пылающий Трон — Кин'гарот"
+    url: "https://www.wowcasual.info/rejdy-legion-antorus-pylayushhij-tron-kingar/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды Legion — Анторус"
+    boss: "Кин'гарот"
+    boss_number: 7
+    word_count: 1542
+
+  - title: "Анторус, Пылающий Трон — Вариматрас"
+    url: "https://www.wowcasual.info/rejdy-legion-antorus-pylayushhij-tron-varimat/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды Legion — Анторус"
+    boss: "Вариматрас"
+    boss_number: 8
+    word_count: 1300
+
+  - title: "Анторус, Пылающий Трон — Ковен шиварр"
+    url: "https://www.wowcasual.info/rejdy-legion-antorus-pylayushhij-tron-koven-sh/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды Legion — Анторус"
+    boss: "Ковен шиварр"
+    boss_number: 9
+    word_count: 1242
+
+  - title: "Анторус, Пылающий Трон — Агграмар"
+    url: "https://www.wowcasual.info/rejdy-legion-antorus-pylayushhij-tron-aggrama/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды Legion — Анторус"
+    boss: "Агграмар"
+    boss_number: 10
+    word_count: 2006
+
+  - title: "Анторус, Пылающий Трон — Аргус Порабощённый"
+    url: "https://www.wowcasual.info/rejdy-legion-antorus-pylayushhij-tron-argus-p/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды Legion — Анторус"
+    boss: "Аргус Порабощённый"
+    boss_number: 11
+    word_count: 3249
+    style_notes: >
+      Финальный босс — самый длинный гайд (3249 слов).
+      4 фазы с участием Титанов. Детальная тактика по
+      каждой фазе. Лорная справка о мире-душе.
+
+  # === BOSS_TACTICS: Цитадель Адского Пламени (7 примеров) ===
+  - title: "Цитадель Адского Пламени — Килрогг Мёртвый Глаз"
+    url: "https://www.wowcasual.info/rejdy-wod-tsitadel-adskogo-plameni-killrog-mertvy-j-glaz/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды WoD — Цитадель Адского Пламени"
+    boss: "Килрогг Мёртвый Глаз"
+    word_count: 1942
+
+  - title: "Цитадель Адского Пламени — Повелитель Скверны Закуун"
+    url: "https://www.wowcasual.info/rejdy-wod-tsitadel-adskogo-plameni-povelitel-skverny-zakuun/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды WoD — Цитадель Адского Пламени"
+    boss: "Повелитель Скверны Закуун"
+    word_count: 1163
+
+  - title: "Цитадель Адского Пламени — Ксул'горак"
+    url: "https://www.wowcasual.info/rejdy-wod-tsitadel-adskogo-plameni-ksulgorak/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды WoD — Цитадель Адского Пламени"
+    boss: "Ксул'горак"
+    word_count: 1792
+
+  - title: "Цитадель Адского Пламени — Деспотичная Велари"
+    url: "https://www.wowcasual.info/rejdy-wod-tsitadel-adskogo-plameni-despotichnaya-velari/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды WoD — Цитадель Адского Пламени"
+    boss: "Деспотичная Велари"
+    word_count: 1466
+
+  - title: "Цитадель Адского Пламени — Повелитель теней Искар"
+    url: "https://www.wowcasual.info/rejdy-wod-tsitadel-adskogo-plameni-temny-j-povelitel-iskar/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды WoD — Цитадель Адского Пламени"
+    boss: "Повелитель теней Искар"
+    word_count: 1358
+
+  - title: "Цитадель Адского Пламени — Сокретар Вечный"
+    url: "https://www.wowcasual.info/rejdy-wod-tsitadel-adskogo-plameni-sokretar-vechny-j/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды WoD — Цитадель Адского Пламени"
+    boss: "Сокретар Вечный"
+    word_count: 1809
+
+  - title: "Цитадель Адского Пламени — Маннорот"
+    url: "https://www.wowcasual.info/rejdy-wod-tsitadel-adskogo-plameni-mannorot/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды WoD — Цитадель Адского Пламени"
+    boss: "Маннорот"
+    word_count: 1458
+
+  - title: "Цитадель Адского Пламени — Архимонд"
+    url: "https://www.wowcasual.info/rejdy-wod-tsitadel-adskogo-plameni-arhimond/"
+    subtype: boss_tactics
+    game: World of Warcraft
+    series: "Рейды WoD — Цитадель Адского Пламени"
+    boss: "Архимонд"
+    word_count: 2046
+    style_notes: >
+      Финальный босс рейда — три фазы. Подробная тактика
+      по ролям. Второй по длине гайд после Аргуса.
+
+  # === RAID_OVERVIEW (1 пример) ===
+  - title: "Цитадель Адского Пламени — первые впечатления"
+    url: "https://www.wowcasual.info/tsitadel-adskogo-plameni-pervy-e-vpechatleniya/"
+    subtype: raid_overview
+    game: World of Warcraft
+    series: "Рейды WoD — Цитадель Адского Пламени"
+    word_count: 610
+    style_notes: >
+      Не тактика, а дневниковые впечатления от рейда.
+      Дизайн, сложность, статистика WoW Progress. Короткий
+      формат. Ссылки на тактики в P.S.
