@@ -4,6 +4,7 @@ __pycache__/
 *.pyo
 .claude/*
 !.claude/commands/
+!.claude/skills/
 config.yaml
 *.egg-info/
 dist/
