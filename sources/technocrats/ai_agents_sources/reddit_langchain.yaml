@@ -1,0 +1,4 @@
+type: rss
+name: reddit-langchain
+feeds:
+  - https://www.reddit.com/r/LangChain/.rss

@@ -1,0 +1,4 @@
+type: rss
+name: reddit-claude
+feeds:
+  - https://www.reddit.com/r/ClaudeAI/.rss

@@ -1,0 +1,4 @@
+type: rss
+name: reddit-localllama
+feeds:
+  - https://www.reddit.com/r/LocalLLaMA/.rss

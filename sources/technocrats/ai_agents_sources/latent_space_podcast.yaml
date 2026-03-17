@@ -1,0 +1,4 @@
+type: rss
+name: latent-space-podcast
+feeds:
+  - https://www.latent.space/feed

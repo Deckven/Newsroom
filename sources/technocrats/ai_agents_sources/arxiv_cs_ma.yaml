@@ -1,0 +1,4 @@
+type: rss
+name: arxiv-cs-multiagent
+feeds:
+  - https://rss.arxiv.org/rss/cs.MA
