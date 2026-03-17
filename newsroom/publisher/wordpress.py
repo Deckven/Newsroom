@@ -20,8 +20,8 @@ class WordPressPublisher(BasePublisher):
 
     platform = "wordpress"
 
-    def __init__(self, config: WordPressConfig | None = None) -> None:
-        self.config = config or WordPressConfig.from_env()
+    def __init__(self, config: WordPressConfig | None = None, domain: str | None = None) -> None:
+        self.config = config or WordPressConfig.from_env(domain)
 
     def publish(
         self,

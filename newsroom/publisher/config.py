@@ -6,10 +6,11 @@ No credentials are stored in code or config files.
 
 Required env vars per platform:
 
-WordPress:
-  WORDPRESS_URL          — site URL (e.g. https://myblog.com)
-  WORDPRESS_USER         — username
-  WORDPRESS_APP_PASSWORD — application password
+WordPress (per-domain):
+  {DOMAIN}_WORDPRESS_URL          — site URL (e.g. https://wowcasual.info)
+  {DOMAIN}_WORDPRESS_USER         — username
+  {DOMAIN}_WORDPRESS_APP_PASSWORD — application password
+  where {DOMAIN} is WOWCASUAL or TECHNOCRATS
 
 Telegram:
   TELEGRAM_BOT_TOKEN     — bot token from @BotFather
@@ -50,20 +51,30 @@ import os
 from dataclasses import dataclass
 
 
+DOMAIN_PREFIXES = {
+    "wowcasual": "WOWCASUAL",
+    "technocrats": "TECHNOCRATS",
+}
+
+
 @dataclass(frozen=True)
 class WordPressConfig:
     url: str
     user: str
     app_password: str
+    domain: str = ""
 
     @classmethod
-    def from_env(cls) -> WordPressConfig | None:
-        url = os.getenv("WORDPRESS_URL")
-        user = os.getenv("WORDPRESS_USER")
-        pw = os.getenv("WORDPRESS_APP_PASSWORD")
+    def from_env(cls, domain: str | None = None) -> WordPressConfig | None:
+        prefix = DOMAIN_PREFIXES.get(domain, "") if domain else ""
+        if prefix:
+            prefix += "_"
+        url = os.getenv(f"{prefix}WORDPRESS_URL")
+        user = os.getenv(f"{prefix}WORDPRESS_USER")
+        pw = os.getenv(f"{prefix}WORDPRESS_APP_PASSWORD")
         if not all([url, user, pw]):
             return None
-        return cls(url=url, user=user, app_password=pw)  # type: ignore[arg-type]
+        return cls(url=url, user=user, app_password=pw, domain=domain or "")  # type: ignore[arg-type]
 
 
 @dataclass(frozen=True)
