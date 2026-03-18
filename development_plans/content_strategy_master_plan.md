@@ -27,7 +27,7 @@
 
 ---
 
-## 1. EVE Online (11 статей)
+## 1. EVE Online (12 статей)
 
 > Все файлы — `[план]`, в `docs/wowcasual/eve_online/drafts/`
 
@@ -48,6 +48,7 @@
 |---|------|--------|-----------|------|
 | 6 | **Catalyst: новая руда, новые корабли, новый майнинг** | `patch_timeline: patch_chronicle` | Высокий | `eve_online_catalyst_expansion_2026_03_16.md` |
 | 7 | **Exordium: 53 системы для новичков — спасение или пузырь?** | `essay: polemic` | Высокий | `exordium_npe_2026_03_16.md` |
+| 8 | **Cerberus в T4 Бездне: как фармить Abyssal Deadspace** | `guide: step_by_step` | Высокий | `cerberus_t4_abyssal_guide_2026_03_18.md` |
 
 ### Серия 4: Роадмап и будущее (patch_timeline / essay)
 | # | Тема | Подтип | Приоритет | Файл |
@@ -133,7 +134,7 @@
 
 ---
 
-## 3. Diablo IV: Lord of Hatred (13 статей)
+## 3. Diablo IV: Lord of Hatred (16 статей)
 
 > Все файлы — `[план]`, в `docs/wowcasual/diablo_iv/drafts/`
 
@@ -149,6 +150,9 @@
 |---|------|--------|-----------|------|
 | 4 | **Паладин в Diablo IV: система Клятв и лучшие билды** | `guide: catalog` | Высокий | `paladin_sistema_klyatv_bildy_2026_03_16.md` |
 | 5 | **Варлок: «металл-альбом ожил» — гайд по Soul Shard системе** | `guide: step_by_step` | Высокий | `varlok_soul_shard_gaid_2026_03_16.md` |
+| 14 | **Spiritborn: четыре духа джунглей и лучшие билды** | `guide: catalog` | Высокий | `spiritborn_dukhi_dzhunglei_gaid_2026_03_18.md` |
+| 15 | **Разбойник: специализации, Imbuements и лучшие билды** | `guide: catalog` | Высокий | `rogue_specializations_bildy_2026_03_18.md` |
+| 16 | **Колдун: система Зачарований и лучшие билды** | `guide: catalog` | Высокий | `sorcerer_enchantments_bildy_2026_03_18.md` |
 
 ### Серия 3: Сезон 12 — Season of Slaughter (guide / patch_timeline)
 | # | Тема | Подтип | Приоритет | Файл |
