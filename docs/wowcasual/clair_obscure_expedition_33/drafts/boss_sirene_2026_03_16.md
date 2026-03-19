@@ -6,16 +6,32 @@ format: boss_fight_guide
 subtype: boss_tactics
 topic: "Clair Obscur: Expedition 33 — тактика боя с Sirene"
 status: draft
-sources_used: []
+sources_used:
+  - name: "Game8 — How to Beat Sirene"
+    url: "https://game8.co/games/Clair-Obscur-Expedition-33/archives/520902"
+  - name: "Neoseeker — Sirene Boss Guide"
+    url: "https://www.neoseeker.com/clair-obscur-expedition-33/Sirene_(Boss)"
+  - name: "Fextralife Wiki — Sirene"
+    url: "https://expedition33.wiki.fextralife.com/Sirene"
 ---
 
 # Expedition 33: как победить Sirene
 
 Sirene — один из самых эпичных и масштабных боёв второго акта Clair Obscur: Expedition 33. Три фазы, механика Grand Ballet, постоянное очарование и атаки, которые сложнее парировать, чем у любого предыдущего босса. Это бой на выносливость и концентрацию.
 
+## Слабости и появления
+
+| Параметр | Значение |
+|----------|----------|
+| Слабость | **Лёд, Тьма** |
+| Сопротивления | **Свет, Земля** |
+| Появления | Sirene (обязательный) |
+
+Экипируйте **Anti-Charm Picto/Lumina** для защиты от Charm, или держите Cleansing Tint под рукой.
+
 ## Локация
 
-Бой происходит в зоне Sirene — обширной островной локации второго акта. К моменту встречи с боссом вы уже должны быть знакомы с механиками Charm из боя с Glissando.
+Бой происходит в зоне Sirene — обширной островной локации второго акта. К моменту встречи вы должны быть знакомы с механиками Charm из боя с Glissando.
 
 ## Слабости
 

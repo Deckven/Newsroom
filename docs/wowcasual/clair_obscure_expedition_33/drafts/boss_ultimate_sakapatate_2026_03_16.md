@@ -6,7 +6,13 @@ format: boss_fight_guide
 subtype: boss_tactics
 topic: "Clair Obscur: Expedition 33 — тактика боя с Ultimate Sakapatate"
 status: draft
-sources_used: []
+sources_used:
+  - name: "Fextralife Wiki — Ultimate Sakapatate"
+    url: "https://expedition33.wiki.fextralife.com/Ultimate+Sakapatate"
+  - name: "Game8 — Boss List"
+    url: "https://game8.co/games/Clair-Obscur-Expedition-33/archives/513923"
+  - name: "Screen Rant — All Main Bosses"
+    url: "https://screenrant.com/clair-obscur-expedition-33-all-bosses-how-to-beat-list/"
 ---
 
 # Expedition 33: как победить Ultimate Sakapatate
@@ -17,9 +23,16 @@ Ultimate Sakapatate — один из самых колоритных боссо
 
 Босс расположен на открытом поле под массивным колоколом к северу от Ancient Sanctuary. Это опциональная зона, но пройти мимо такого противника — значит лишить себя ценного опыта и лута.
 
-## Слабость к Огню
+## Слабости и сопротивления
 
-Ultimate Sakapatate уязвим к стихии Огня. Все огненные атаки наносят повышенный урон — используйте Rain of Fire, Wildfire и любые другие пирокинетические навыки для максимальной эффективности.
+| Параметр | Значение |
+|----------|----------|
+| Слабость | **Огонь** |
+| Сопротивления | нет |
+| Слабая точка | **Правый плечевой сустав** (после снятия щита) |
+| Появления | Ancient Sanctuary, The Monolith, Endless Tower, Endless Night Sanctuary |
+
+Все огненные атаки наносят повышенный урон — Rain of Fire, Wildfire и любые пирокинетические навыки.
 
 ## Механика щита и слабой точки
 

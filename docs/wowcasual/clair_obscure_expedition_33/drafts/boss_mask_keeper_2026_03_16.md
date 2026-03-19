@@ -6,16 +6,32 @@ format: boss_fight_guide
 subtype: boss_tactics
 topic: "Clair Obscur: Expedition 33 — тактика боя с Mask Keeper"
 status: draft
-sources_used: []
+sources_used:
+  - name: "Game8 — How to Beat Mask Keeper"
+    url: "https://game8.co/games/Clair-Obscur-Expedition-33/archives/520517"
+  - name: "Fextralife Wiki — Mask Keeper"
+    url: "https://expedition33.wiki.fextralife.com/Mask+Keeper"
+  - name: "Neoseeker — Mask Keeper Boss Guide"
+    url: "https://www.neoseeker.com/clair-obscur-expedition-33/Mask_Keeper"
 ---
 
 # Expedition 33: как победить Mask Keeper
 
 Mask Keeper — босс, который атакует сразу после победы над Visages, без перерыва на отдых и лечение. Это одно из самых жёстких испытаний второго акта Clair Obscur: Expedition 33, и его сложность напрямую зависит от того, насколько хорошо вы подготовились в предыдущих зонах.
 
+## Слабости и появления
+
+| Параметр | Значение |
+|----------|----------|
+| Слабость | **Огонь, Тьма** |
+| Сопротивления | **Лёд** |
+| Появления | Peaks/Visages (обязательный), Endless Tower Stage 11 Trial 1 |
+| **XP** | **123 195** |
+| **Награды** | Immaculate Picto, Resplendent Chroma Catalyst x6, Recoat x2 |
+
 ## Контекст: бой без паузы
 
-Mask Keeper появляется немедленно после победы над Visages. У вас не будет возможности восполнить HP, AP или использовать лагерь. Это означает, что ваша подготовка к бою с Visages — это одновременно подготовка к Mask Keeper. Перед финальным ударом по Visages вылечите группу настолько, насколько возможно.
+Mask Keeper появляется немедленно после победы над Visages. У вас не будет возможности восполнить HP, AP или использовать лагерь. Перед финальным ударом по Visages **вылечите группу максимально**.
 
 ## Подготовка: три долины решают всё
 

@@ -6,7 +6,13 @@ format: boss_fight_guide
 subtype: boss_tactics
 topic: "Clair Obscur: Expedition 33 — тактика боя с Dualliste"
 status: draft
-sources_used: []
+sources_used:
+  - name: "Game8 — How to Beat Dualliste"
+    url: "https://game8.co/games/Clair-Obscur-Expedition-33/archives/519298"
+  - name: "Fextralife Wiki — Dualliste"
+    url: "https://expedition33.wiki.fextralife.com/Dualliste"
+  - name: "Kotaku — How to Defeat Dualliste"
+    url: "https://kotaku.com/clair-obscur-expedition-33-dualliste-phase-2-verso-1851781495"
 ---
 
 # Expedition 33: как победить Dualliste
@@ -17,9 +23,18 @@ Dualliste — первый босс второго акта Clair Obscur: Expedi
 
 Forgotten Battlefield — мрачное поле, усеянное остатками прошлых сражений. Бой происходит в конце зоны и знаменует начало значительного скачка сложности во втором акте.
 
-## Слабость к Свету, сопротивление Огню
+## Слабости и появления
 
-Dualliste уязвим к стихии Света и устойчив к Огню. Это означает, что Verso с его световыми навыками (Perfect Break, Purification, Follow Up после Free Aim Shot) — ваш главный источник стихийного урона. Огненные навыки Maelle и Lune здесь малоэффективны.
+| Параметр | Значение |
+|----------|----------|
+| Слабость | **Свет (Light)** |
+| Сопротивления | **Огонь, Тьма** |
+| Слабая точка | нет |
+| Появления | Forgotten Battlefield (обязательный), Flying Manor, Endless Tower (Stage 1/11) |
+| **XP** | **27 560** |
+| **Награды** | Polished Chroma Catalyst |
+
+Verso с его световыми навыками (Perfect Break, Purification, Follow Up после Free Aim Shot) — главный источник стихийного урона. Огненные и тёмные навыки Maelle и Sciel здесь малоэффективны — босс **сопротивляется обоим**.
 
 ## Фаза 1: Одиночный мечник
 

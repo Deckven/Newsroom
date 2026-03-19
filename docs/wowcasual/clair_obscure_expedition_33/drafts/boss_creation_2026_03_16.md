@@ -6,16 +6,27 @@ format: boss_fight_guide
 subtype: boss_tactics
 topic: "Clair Obscur: Expedition 33 — тактика боя с Creation"
 status: draft
-sources_used: []
+sources_used:
+  - name: "Fextralife Wiki — Creation"
+    url: "https://expedition33.wiki.fextralife.com/Creation"
+  - name: "Game8 — Boss List"
+    url: "https://game8.co/games/Clair-Obscur-Expedition-33/archives/513923"
 ---
 
 # Expedition 33: как победить Creation
 
 Creation — предпоследний босс Clair Obscur: Expedition 33, встречающий экспедицию в Садах Люмьера (Gardens in Lumiere) третьего акта. Существо, похожее на лошадь с четырьмя тощими ногами и затвердевшей золотой жидкостью на теле, — один из самых выносливых противников в игре. Огромный запас HP, статус Inverted и мощные комбо делают этот бой настоящим испытанием на прочность.
 
+## Слабости и появления
+
+| Параметр | Значение |
+|----------|----------|
+| Слабость | **Нет** |
+| Появления | Lumiere (обязательный), Endless Tower, Renoir's Drafts |
+
 ## Локация
 
-От чекпоинта Lumiere's Gardens продвигайтесь мимо фонтана и следуйте прямо по дорожке — Creation появится в конце пути. Это обязательный бой для доступа к финальному сражению с Renoir.
+От чекпоинта Lumiere's Gardens — мимо фонтана, прямо по дорожке. Creation появится в конце. Обязательный бой для доступа к финальному Renoir.
 
 ## Сопротивления и слабости
 

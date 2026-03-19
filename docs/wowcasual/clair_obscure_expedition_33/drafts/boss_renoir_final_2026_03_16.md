@@ -6,7 +6,15 @@ format: boss_fight_guide
 subtype: boss_tactics
 topic: "Clair Obscur: Expedition 33 — тактика боя с Renoir (финальный бой)"
 status: draft
-sources_used: []
+sources_used:
+  - name: "Game8 — How to Beat Renoir (Final Boss)"
+    url: "https://game8.co/games/Clair-Obscur-Expedition-33/archives/519235"
+  - name: "Fextralife Wiki — Renoir"
+    url: "https://expedition33.wiki.fextralife.com/Renoir"
+  - name: "Kotaku — How to Defeat Renoir"
+    url: "https://kotaku.com/clair-obscur-expedition-33-renoir-boss-mansion-verso-1851782747"
+  - name: "Gamepressure — Final Boss"
+    url: "https://www.gamepressure.com/clair-obscur-expedition-33/final-boss/z61199b"
 ---
 
 # Expedition 33: как победить Renoir (финальный бой)
@@ -17,9 +25,18 @@ sources_used: []
 
 **Минимальный уровень:** 60+, рекомендуемый 70+. Улучшите оружие до максимума перед боем — это финальное сражение, и все оставшиеся материалы бесполезны после него. Не экономьте ресурсы.
 
-## Нет стихийных слабостей
+## Слабости и данные
 
-Как и в первом бою, Renoir не имеет стихийных уязвимостей. Состав группы определяется не стихийным покрытием, а синергией навыков и комфортом в парировании его атак.
+| Параметр | Значение |
+|----------|----------|
+| Слабость | **Нет** |
+| Сопротивления | нет |
+| Появления | Lumiere (финальный, обязательный) |
+| **XP** | **183 000** |
+| **Награды** | Нет прямых наград (финальный бой) |
+| Рек. уровень | **70+** |
+
+Как и в первом бою, Renoir не имеет стихийных уязвимостей. Состав определяется синергией навыков и комфортом в парировании.
 
 ## Паттерны атак — Фаза 1
 

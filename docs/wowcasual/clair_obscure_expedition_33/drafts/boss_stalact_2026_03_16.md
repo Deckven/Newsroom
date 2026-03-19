@@ -6,7 +6,13 @@ format: boss_fight_guide
 subtype: boss_tactics
 topic: "Clair Obscur: Expedition 33 — тактика боя с Stalact"
 status: draft
-sources_used: []
+sources_used:
+  - name: "Neoseeker — Stalact Boss Guide"
+    url: "https://www.neoseeker.com/clair-obscur-expedition-33/Stalact"
+  - name: "Game8 — Boss List"
+    url: "https://game8.co/games/Clair-Obscur-Expedition-33/archives/513923"
+  - name: "Screen Rant — All Main Bosses"
+    url: "https://screenrant.com/clair-obscur-expedition-33-all-bosses-how-to-beat-list/"
 ---
 
 # Expedition 33: как победить Stalact
@@ -16,6 +22,13 @@ Stalact — босс на станции Монако (Monoco's Station) во в
 ## Локация и контекст
 
 Бой происходит на станции Монако — ключевой сюжетной локации второго акта. Stalact — массивное существо, чьи кулаки способны сотрясать землю. Помимо стандартного боссфайта, эта встреча служит обучающей — вы впервые используете Gradient-атаки в реальном бою.
+
+## Слабости и появления
+
+| Параметр | Значение |
+|----------|----------|
+| Слабость | **Огонь** (в Ледяной стойке) / **Лёд** (в Огненной стойке) |
+| Появления | Monoco's Station (обязательный), Flying Manor |
 
 ## Двойная стихийная механика
 

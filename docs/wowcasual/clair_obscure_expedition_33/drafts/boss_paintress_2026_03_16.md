@@ -6,16 +6,27 @@ format: boss_fight_guide
 subtype: boss_tactics
 topic: "Clair Obscur: Expedition 33 — тактика боя с The Paintress"
 status: draft
-sources_used: []
+sources_used:
+  - name: "Fextralife Wiki — The Paintress"
+    url: "https://expedition33.wiki.fextralife.com/The+Paintress"
+  - name: "Game8 — Boss List"
+    url: "https://game8.co/games/Clair-Obscur-Expedition-33/archives/513923"
 ---
 
 # Expedition 33: как победить The Paintress
 
 The Paintress — финальный босс второго акта Clair Obscur: Expedition 33, ожидающий экспедицию на вершине The Monolith. Этот бой вводит одну из самых стрессовых механик в игре: Corrupted Chroma — проклятие смерти с обратным отсчётом на два хода. Если вы не готовы — вы проиграете. Если готовы — это один из самых захватывающих боёв в игре.
 
+## Слабости и появления
+
+| Параметр | Значение |
+|----------|----------|
+| Слабость | **Нет** |
+| Появления | The Monolith (обязательный) |
+
 ## Локация
 
-Вершина Монолита — кульминация второго акта. Бой доступен только после прохождения всех предыдущих зон. Перед восхождением убедитесь, что ваш состав и экипировка оптимизированы — возврата не будет.
+Вершина Монолита — кульминация второго акта. Перед восхождением убедитесь, что состав и экипировка оптимизированы — возврата не будет.
 
 ## Нет стихийных слабостей
 

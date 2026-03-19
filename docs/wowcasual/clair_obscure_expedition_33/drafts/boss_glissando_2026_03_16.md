@@ -6,16 +6,30 @@ format: boss_fight_guide
 subtype: boss_tactics
 topic: "Clair Obscur: Expedition 33 — тактика боя с Glissando"
 status: draft
-sources_used: []
+sources_used:
+  - name: "Gameranx — Glissando Boss Fight Guide"
+    url: "https://gameranx.com/features/id/537559/article/clair-obscur-expedition-33-glissando-boss-fight-guide/"
+  - name: "Fextralife Wiki — Glissando"
+    url: "https://expedition33.wiki.fextralife.com/Glissando"
+  - name: "Game8 — Boss List"
+    url: "https://game8.co/games/Clair-Obscur-Expedition-33/archives/513923"
 ---
 
 # Expedition 33: как победить Glissando
 
 Glissando — гигантский червь-босс в локации Sirene, один из самых запоминающихся противников второго акта Clair Obscur: Expedition 33. Этот босс обёрнут полосами ткани, двигается как змея и обладает уникальной механикой поглощения павших союзников. Если персонаж погибает — Glissando его съедает и полностью восстанавливает здоровье.
 
+## Слабости и появления
+
+| Параметр | Значение |
+|----------|----------|
+| Слабость | **Лёд, Тьма** |
+| Сопротивления | **Земля, Свет** |
+| Появления | Sirene (обязательный) |
+
 ## Локация и доступ
 
-Glissando обитает внутри Sirene's Dress — опциональной зоны на острове Сирены. Для доступа необходимы: способность Эски к плаванию и уровень отношений с Lune не ниже 6. Это опциональный босс, но награды за его убийство делают бой более чем оправданным.
+Glissando обитает внутри зоны Sirene. Для доступа необходимы: способность Эски к плаванию и уровень отношений с Lune не ниже 6.
 
 ## Слабости
 

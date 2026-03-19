@@ -6,7 +6,13 @@ format: boss_fight_guide
 subtype: boss_tactics
 topic: "Clair Obscur: Expedition 33 — тактика боя с Renoir (первый бой)"
 status: draft
-sources_used: []
+sources_used:
+  - name: "Fextralife Wiki — Renoir"
+    url: "https://expedition33.wiki.fextralife.com/Renoir"
+  - name: "DualShockers — How to Beat Renoir (All Fights)"
+    url: "https://www.dualshockers.com/clair-obscur-expedition-33-how-to-beat-renoir-all-fights/"
+  - name: "Game8 — Renoir Second Fight"
+    url: "https://game8.co/games/Clair-Obscur-Expedition-33/archives/520683"
 ---
 
 # Expedition 33: как победить Renoir (первый бой)
@@ -17,9 +23,15 @@ sources_used: []
 
 Old Lumiere — мрачная, разрушенная версия города Люмьер. Бой происходит перед выходом из зоны и является обязательным для продвижения по сюжету второго акта.
 
-## Нет слабостей — чистая механика
+## Слабости и появления
 
-Renoir не имеет стихийных уязвимостей. Никакая стихия не даст бонусного урона. Это бой на чистой механике: правильное парирование, уклонение и максимизация урона через дебаффы, а не через эксплуатацию слабостей.
+| Параметр | Значение |
+|----------|----------|
+| Слабость | **Нет** — чистая механика |
+| Сопротивления | нет |
+| Появления | Old Lumiere (обязательный), The Monolith |
+
+Renoir не имеет стихийных уязвимостей. Это бой на чистой механике: правильное парирование, уклонение и максимизация урона через дебаффы, а не через эксплуатацию слабостей.
 
 ## Паттерны атак
 

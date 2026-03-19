@@ -6,16 +6,27 @@ format: boss_fight_guide
 subtype: boss_tactics
 topic: "Clair Obscur: Expedition 33 — тактика боя с Lampmaster"
 status: draft
-sources_used: []
+sources_used:
+  - name: "Fextralife Wiki — Lampmaster"
+    url: "https://expedition33.wiki.fextralife.com/Lampmaster"
+  - name: "Game8 — Boss List"
+    url: "https://game8.co/games/Clair-Obscur-Expedition-33/archives/513923"
 ---
 
 # Expedition 33: как победить Lampmaster
 
 Lampmaster — финальный босс первого акта Clair Obscur: Expedition 33, ожидающий экспедицию на Stone Wave Cliffs. Это первый по-настоящему сложный бой в игре: две полные фазы здоровья, механика фонарей, ритуал запоминания последовательности и атака «Меч Света», способная уничтожить группу. Приготовьтесь к длительному и напряжённому сражению.
 
+## Слабости и появления
+
+| Параметр | Значение |
+|----------|----------|
+| Слабость | **Нет** |
+| Появления | Stone Wave Cliffs (обязательный), Endless Tower |
+
 ## Локация
 
-Stone Wave Cliffs — финальная зона первого акта. Бой происходит на открытой площадке, окружённой скалами. Перед боем убедитесь, что ваши запасы лечения полны — здесь каждый расходник на вес золота.
+Stone Wave Cliffs — финальная зона первого акта. Перед боем убедитесь, что запасы лечения полны.
 
 ## Механика фонарей — сердце боя
 
