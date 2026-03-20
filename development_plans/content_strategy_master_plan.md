@@ -2,7 +2,7 @@
 
 > Сводный документ по анализу 7 Content Strategy документов.
 > Дата создания: 2026-03-16
-> Обновлено: 2026-03-18
+> Обновлено: 2026-03-20
 
 ## Легенда статусов
 
@@ -11,7 +11,7 @@
 | `[план]` | Заготовка-скелет | ~600–850 слов, без веб-исследования. Требует: исследование → черновик → рерайт |
 | `[черновик]` | Готов к обработке | ~1200–3500 слов, с источниками и фактами. Требует: рерайт в стиле блога |
 
-Все файлы `*_2026_03_16.md` — планы. Все файлы `*_2026_03_18.md` — черновики.
+Файлы `*_2026_03_16.md` — планы. Файлы `*_2026_03_18.md` и позже — черновики.
 
 ## Источники анализа
 
@@ -29,7 +29,8 @@
 
 ## 1. EVE Online (12 статей)
 
-> Все файлы — `[план]`, в `docs/wowcasual/eve_online/drafts/`
+> Файлы `*_2026_03_16.md` — `[план]`, файлы `*_2026_03_18.md` и позже — `[черновик]`
+> Все в `docs/wowcasual/eve_online/drafts/`
 
 ### Серия 1: Геополитика (essay / diary)
 | # | Тема | Подтип | Приоритет | Файл |
@@ -48,7 +49,9 @@
 |---|------|--------|-----------|------|
 | 6 | **Catalyst: новая руда, новые корабли, новый майнинг** | `patch_timeline: patch_chronicle` | Высокий | `eve_online_catalyst_expansion_2026_03_16.md` |
 | 7 | **Exordium: 53 системы для новичков — спасение или пузырь?** | `essay: polemic` | Высокий | `exordium_npe_2026_03_16.md` |
-| 8 | **Cerberus в T4 Бездне: как фармить Abyssal Deadspace** | `guide: step_by_step` | Высокий | `cerberus_t4_abyssal_guide_2026_03_18.md` |
+| 8 | **Cerberus в T4 Бездне: как фармить Abyssal Deadspace** | `guide: step_by_step` | Высокий | `cerberus_t4_abyssal_guide_2026_03_18.md` `[черновик]` |
+| 8a | **Hawk в T1–T2 Бездне: первые шаги на ассолт-фригате** | `guide: step_by_step` | Высокий | `hawk_t1_t2_abyssal_guide_2026_03_19.md` `[черновик]` |
+| 8b | **Хайсек, лоусек, нульсек или ВХ — где жить?** | `guide: decision` | Высокий | `eve_online_where_to_live_2026_03_20.md` `[черновик]` |
 
 ### Серия 4: Роадмап и будущее (patch_timeline / essay)
 | # | Тема | Подтип | Приоритет | Файл |
@@ -178,7 +181,8 @@
 
 ## 4. EVE Frontier (13 статей)
 
-> Все файлы — `[план]`, в `docs/wowcasual/eve_frontier/drafts/`
+> Файлы `*_2026_03_16.md` — `[план]`, файлы `*_2026_03_18.md` и позже — `[черновик]`
+> Все в `docs/wowcasual/eve_frontier/drafts/`
 
 ### Серия 1: Что такое EVE Frontier (essay / review)
 | # | Тема | Подтип | Приоритет | Файл |
@@ -195,6 +199,7 @@
 ### Серия 3: Выживание и гайды — Cycle 5: Shroud of Fear (guide)
 | # | Тема | Подтип | Приоритет | Файл |
 |---|------|--------|-----------|------|
+| 5a | **EVE Frontier Cycle 5: Shroud of Fear — полный обзор патч-ноутов** | `patch_timeline: patch_chronicle` | Высокий | `cycle_5_patch_notes_reveal_obzor_2026_03_18.md` `[черновик]` |
 | 6 | **Shroud of Fear: первые шаги в Cycle 5** | `guide: onboarding` | Высокий | `shroud_of_fear_pervye_shagi_cycle_5_2026_03_16.md` |
 | 7 | **Shell Industry: Nursery, Nest и Crowns** | `guide: step_by_step` | Высокий | `shell_industry_nursery_nest_crowns_2026_03_16.md` |
 | 8 | **Orbital Zones: Feral AI, лут и ресурсы** | `guide: step_by_step` | Высокий | `orbital_zones_feral_ai_lut_resursy_2026_03_16.md` |
@@ -426,24 +431,24 @@
 
 | Игра / Серия | Всего | `[план]` | `[черновик]` | Высокий | Средний | Вечнозелёный |
 |------|-------|----------|-------------|---------|---------|-------------|
-| EVE Online | 11 | 11 | 0 | 5 | 4 | 2 |
+| EVE Online | 13 | 10 | 3 | 7 | 4 | 2 |
 | Black Myth Wukong | 40 | 40 | 0 | 6 | 34 | 0 |
-| Diablo IV | 13 | 13 | 0 | 7 | 6 | 0 |
-| EVE Frontier | 13 | 13 | 0 | 6 | 7 | 0 |
+| Diablo IV | 16 | 10 | 6 | 10 | 6 | 0 |
+| EVE Frontier | 14 | 12 | 2 | 7 | 7 | 0 |
 | Ghost of Yōtei | 13 | 13 | 0 | 6 | 7 | 0 |
 | WoW Midnight (секция 6) | 17 | 17 | 0 | 10 | 7 | 0 |
 | Clair Obscur: Expedition 33 | 33 | 33 | 0 | 16 | 17 | 0 |
 | WoW: Возвращающийся игрок (секция 8) | 17 | 0 | 17 | — | — | 17 |
-| **ИТОГО** | **157** | **140** | **17** | **56** | **82** | **19** |
+| **ИТОГО** | **163** | **135** | **28** | **62** | **82** | **19** |
 
 ## Распределение по форматам (без секции 8)
 
 | Формат | Кол-во статей |
 |--------|--------------|
-| `guide` (step_by_step, catalog, onboarding) | 43 |
+| `guide` (step_by_step, catalog, onboarding, decision) | 46 |
 | `essay` (reflection, polemic, industry_critique, manifesto, analytical) | 25 |
 | `lore` (lore_essay, serial_chronicle) | 15 |
-| `patch_timeline` (patch_chronicle, game_history) | 6 |
+| `patch_timeline` (patch_chronicle, game_history) | 7 |
 | `boss_fight_guide` (boss_tactics) | 49 |
 | `review` (dlc_review, mmo_expansion, preliminary) | 5 |
 | `diary` (adventure_report) | 1 |
