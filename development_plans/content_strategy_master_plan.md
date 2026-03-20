@@ -27,7 +27,7 @@
 
 ---
 
-## 1. EVE Online (12 статей)
+## 1. EVE Online (14 статей)
 
 > Файлы `*_2026_03_16.md` — `[план]`, файлы `*_2026_03_18.md` и позже — `[черновик]`
 > Все в `docs/wowcasual/eve_online/drafts/`
@@ -52,6 +52,7 @@
 | 8 | **Cerberus в T4 Бездне: как фармить Abyssal Deadspace** | `guide: step_by_step` | Высокий | `cerberus_t4_abyssal_guide_2026_03_18.md` `[черновик]` |
 | 8a | **Hawk в T1–T2 Бездне: первые шаги на ассолт-фригате** | `guide: step_by_step` | Высокий | `hawk_t1_t2_abyssal_guide_2026_03_19.md` `[черновик]` |
 | 8b | **Хайсек, лоусек, нульсек или ВХ — где жить?** | `guide: decision` | Высокий | `eve_online_where_to_live_2026_03_20.md` `[черновик]` |
+| 8c | **Эксплоринг в EVE Online: сканирование, взлом, выживание** | `guide: step_by_step` | Высокий | `eve_online_exploration_guide_2026_03_20.md` `[черновик]` |
 
 ### Серия 4: Роадмап и будущее (patch_timeline / essay)
 | # | Тема | Подтип | Приоритет | Файл |
@@ -431,7 +432,7 @@
 
 | Игра / Серия | Всего | `[план]` | `[черновик]` | Высокий | Средний | Вечнозелёный |
 |------|-------|----------|-------------|---------|---------|-------------|
-| EVE Online | 13 | 10 | 3 | 7 | 4 | 2 |
+| EVE Online | 14 | 10 | 4 | 8 | 4 | 2 |
 | Black Myth Wukong | 40 | 40 | 0 | 6 | 34 | 0 |
 | Diablo IV | 16 | 10 | 6 | 10 | 6 | 0 |
 | EVE Frontier | 14 | 12 | 2 | 7 | 7 | 0 |
@@ -439,13 +440,13 @@
 | WoW Midnight (секция 6) | 17 | 17 | 0 | 10 | 7 | 0 |
 | Clair Obscur: Expedition 33 | 33 | 33 | 0 | 16 | 17 | 0 |
 | WoW: Возвращающийся игрок (секция 8) | 17 | 0 | 17 | — | — | 17 |
-| **ИТОГО** | **163** | **135** | **28** | **62** | **82** | **19** |
+| **ИТОГО** | **164** | **135** | **29** | **63** | **82** | **19** |
 
 ## Распределение по форматам (без секции 8)
 
 | Формат | Кол-во статей |
 |--------|--------------|
-| `guide` (step_by_step, catalog, onboarding, decision) | 46 |
+| `guide` (step_by_step, catalog, onboarding, decision) | 47 |
 | `essay` (reflection, polemic, industry_critique, manifesto, analytical) | 25 |
 | `lore` (lore_essay, serial_chronicle) | 15 |
 | `patch_timeline` (patch_chronicle, game_history) | 7 |
