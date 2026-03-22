@@ -6,6 +6,7 @@ format: essay
 subtype: polemic
 topic: "EVE Online — регион Exordium и проблема удержания новичков"
 status: draft
+published_to_obsidian: 2026-03-22
 sources_used:
   - name: "New Star Systems for New Players Coming to EVE Online — The Ancient Gaming Noob"
     url: https://tagn.wordpress.com/2026/03/07/new-star-systems-for-new-players-coming-to-eve-online/

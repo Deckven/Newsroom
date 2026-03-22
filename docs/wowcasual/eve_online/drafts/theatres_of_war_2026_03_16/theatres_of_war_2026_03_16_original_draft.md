@@ -6,6 +6,7 @@ format: patch_timeline
 subtype: game_history
 topic: "EVE Online — роадмап 2026, три экспансии Theatres of War"
 status: draft
+published_to_obsidian: 2026-03-22
 sources_used:
   - name: "Directors' Letter: 2026 & Beyond — EVE Online"
     url: https://www.eveonline.com/news/view/directors-letter-2026-and-beyond
