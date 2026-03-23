@@ -1,0 +1,4 @@
+type: rss
+name: blackmyth-steam-news
+feeds:
+  - https://store.steampowered.com/feeds/news/app/2358720

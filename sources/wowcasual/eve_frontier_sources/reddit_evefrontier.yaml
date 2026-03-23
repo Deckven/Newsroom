@@ -1,0 +1,4 @@
+type: rss
+name: reddit-evefrontier
+feeds:
+  - https://www.reddit.com/r/evefrontier/.rss

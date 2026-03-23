@@ -1,0 +1,4 @@
+type: rss
+name: gamespot-bmwu
+feeds:
+  - https://www.gamespot.com/feeds/game-news/?query=black+myth+wukong

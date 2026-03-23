@@ -1,0 +1,4 @@
+type: rss
+name: reddit-blackmythwukong-builds
+feeds:
+  - https://www.reddit.com/r/BlackMythWukongBuilds/.rss

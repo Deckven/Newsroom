@@ -1,0 +1,4 @@
+type: rss
+name: reddit-clairobscur
+feeds:
+  - https://www.reddit.com/r/ClairObscur/.rss
